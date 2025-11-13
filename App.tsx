@@ -133,14 +133,14 @@ export default function App() {
                     className="super-arcade-button"
                     onClick={() => setCurrentPage('arcade')}
                   >
-                    🎮 ARCADE GAMES
+                    🎮 YOUR GAMES
                   </button>
 
                   <button 
                     className="super-arcade-button"
                     onClick={() => setCurrentPage('merch-shop')}
                   >
-                    👕 MERCH SHOP
+                    👕 YOUR MERCH
                   </button>
                 </div>
               </div>
@@ -173,7 +173,7 @@ export default function App() {
               WHERE FRIENDS NEVER DIE
             </h2>
             <p className="text-yellow-300 text-sm md:text-xl mt-4 md:mt-6">
-              THE ULTIMATE GAMING DESTINATION
+              READY FOR YOUR CONTENT
             </p>
           </header>
         )}
@@ -186,10 +186,10 @@ export default function App() {
         {/* FUN FOOTER */}
         <footer className="fun-footer">
           <p className="mega-glow-yellow text-lg md:text-2xl">
-            PLAY EVERY DAY
+            COMING SOON
           </p>
           <p className="text-red-400 text-sm md:text-lg mt-2">
-            CHAT • GAMES • MERCH
+            VOICE CHAT • YOUR GAMES • YOUR MERCH
           </p>
           <div className="mt-3">
             <AdSenseBanner />

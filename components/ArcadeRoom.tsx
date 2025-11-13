@@ -1,11 +1,7 @@
 export function ArcadeRoom() {
+  // Empty state - ready for your embedded games
   const games = [
-    { id: 1, name: 'Space Invaders', players: 124, status: 'Online' },
-    { id: 2, name: 'Puzzle Quest', players: 89, status: 'Online' },
-    { id: 3, name: 'Racing Extreme', players: 67, status: 'Maintenance' },
-    { id: 4, name: 'Battle Arena', players: 203, status: 'Online' },
-    { id: 5, name: 'Adventure World', players: 45, status: 'Online' },
-    { id: 6, name: 'Strategy Masters', players: 78, status: 'Online' },
+    // Add your games here later
   ];
 
   return (
@@ -13,37 +9,47 @@ export function ArcadeRoom() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-8">
           <h2 className="text-4xl text-yellow-400 mb-4 mega-glow-yellow">ARCADE GAMES</h2>
-          <p className="text-white text-xl">Choose your game and start playing!</p>
+          <p className="text-white text-xl">Your games will be embedded here!</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {games.map(game => (
-            <div key={game.id} className="bg-gray-900 border-4 border-yellow-400 rounded-lg p-6 text-center transform hover:scale-105 transition-all duration-300">
-              <div className="text-4xl mb-4">🎮</div>
-              <h3 className="text-2xl text-white font-bold mb-2">{game.name}</h3>
-              <div className="flex justify-between text-sm mb-4">
-                <span className="text-green-400">👥 {game.players}</span>
-                <span className={`${game.status === 'Online' ? 'text-green-400' : 'text-red-400'}`}>
-                  {game.status === 'Online' ? '🟢 Online' : '🔴 Maintenance'}
-                </span>
+        {/* Ready for Game Embeds */}
+        <div className="max-w-6xl mx-auto">
+          <div className="bg-gray-900 border-4 border-yellow-400 rounded-lg p-12 text-center">
+            <div className="text-6xl mb-6">🎮</div>
+            <h3 className="text-3xl text-white font-bold mb-4">Ready for Your Games!</h3>
+            <p className="text-gray-300 text-lg mb-6">
+              This area is prepared to host your embedded games. You can add HTML5 games, 
+              iframe embeds, or custom game components.
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+              <div className="bg-gray-800 p-6 rounded-lg border-2 border-green-500">
+                <h4 className="text-green-400 text-xl mb-3">Embedding Instructions</h4>
+                <ul className="text-gray-300 text-left space-y-2">
+                  <li>• Add your game files to the public folder</li>
+                  <li>• Use iframe tags for external games</li>
+                  <li>• Add React components for custom games</li>
+                  <li>• Update this component with your game links</li>
+                </ul>
               </div>
-              <button 
-                className={`w-full py-3 rounded font-bold ${
-                  game.status === 'Online' 
-                    ? 'bg-green-500 hover:bg-green-600 text-white' 
-                    : 'bg-gray-600 text-gray-300 cursor-not-allowed'
-                }`}
-                disabled={game.status !== 'Online'}
-              >
-                {game.status === 'Online' ? 'PLAY NOW' : 'COMING SOON'}
-              </button>
+              
+              <div className="bg-gray-800 p-6 rounded-lg border-2 border-blue-500">
+                <h4 className="text-blue-400 text-xl mb-3">Game Suggestions</h4>
+                <ul className="text-gray-300 text-left space-y-2">
+                  <li>• HTML5 Canvas games</li>
+                  <li>• Phaser.js games</li>
+                  <li>• Three.js 3D games</li>
+                  <li>• Embedded Unity WebGL games</li>
+                </ul>
+              </div>
             </div>
-          ))}
+          </div>
         </div>
 
-        <div className="text-center mt-12">
+        {/* Placeholder for Future Games */}
+        <div className="mt-12 text-center">
           <div className="adsense-banner max-w-4xl mx-auto">
-            <p className="text-yellow-400 text-lg">More games coming soon!</p>
+            <p className="text-yellow-400 text-lg">Perfect spots for game ads!</p>
           </div>
         </div>
       </div>
