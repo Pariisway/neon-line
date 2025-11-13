@@ -39,12 +39,20 @@ export default function App() {
             <div className="particle-bg"></div>
             <div className="floating-emojis"></div>
             
+            {/* PREMIUM HOME PAGE ADS - MOST EXPENSIVE */}
+            <div className="ad-leaderboard mt-8">
+              <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184595877548269"></script>
+              <ins className="adsbygoogle"
+                   style={{display: 'inline-block', width: '728px', height: '90px'}}
+                   data-ad-client="ca-pub-1184595877548269"
+                   data-ad-slot="9999999999"></ins>
+            </div>
+            
             {/* MAIN ARCADE AREA */}
             <div className="main-arcade-area">
               
-              {/* THREE GIANT ARCADE BUTTONS - RIGHT IN THE MIDDLE */}
+              {/* THREE GIANT ARCADE BUTTONS */}
               <div className="arcade-button-grid">
-                {/* VOICE CHAT BUTTON */}
                 <button 
                   className="super-arcade-button"
                   onClick={() => setCurrentPage('voice-chat')}
@@ -52,7 +60,6 @@ export default function App() {
                   🎤 VOICE CHAT
                 </button>
 
-                {/* ARCADE BUTTON */}
                 <button 
                   className="super-arcade-button"
                   onClick={() => setCurrentPage('arcade')}
@@ -60,7 +67,6 @@ export default function App() {
                   🎮 ARCADE GAMES
                 </button>
 
-                {/* MERCH SHOP BUTTON */}
                 <button 
                   className="super-arcade-button"
                   onClick={() => setCurrentPage('merch-shop')}
@@ -69,26 +75,29 @@ export default function App() {
                 </button>
               </div>
 
-              {/* TOP AD */}
-              <div className="fun-ad-container">
-                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184595877548269" crossOrigin="anonymous"></script>
+              {/* MEDIUM RECTANGLE AD */}
+              <div className="ad-medium-rectangle">
                 <ins className="adsbygoogle"
-                     style={{display: 'block'}}
+                     style={{display: 'inline-block', width: '300px', height: '250px'}}
                      data-ad-client="ca-pub-1184595877548269"
-                     data-ad-slot="1234567890"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
+                     data-ad-slot="8888888888"></ins>
               </div>
 
-              {/* BOTTOM AD */}
-              <div className="fun-ad-container">
+              {/* LARGE RECTANGLE AD */}
+              <div className="ad-large-rectangle">
                 <ins className="adsbygoogle"
-                     style={{display: 'block'}}
+                     style={{display: 'inline-block', width: '336px', height: '280px'}}
                      data-ad-client="ca-pub-1184595877548269"
-                     data-ad-slot="0987654321"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
+                     data-ad-slot="7777777777"></ins>
               </div>
+            </div>
+
+            {/* BOTTOM BANNER AD */}
+            <div className="ad-banner mb-8">
+              <ins className="adsbygoogle"
+                   style={{display: 'inline-block', width: '468px', height: '60px'}}
+                   data-ad-client="ca-pub-1184595877548269"
+                   data-ad-slot="6666666666"></ins>
             </div>
           </div>
         );
@@ -96,7 +105,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white relative overflow-hidden">
+    <div className="min-h-screen bg-black text-white relative overflow-hidden matrix-font">
       {/* ANIMATED BACKGROUND */}
       <div className="particle-bg"></div>
       <div className="floating-emojis"></div>
@@ -108,10 +117,10 @@ export default function App() {
             THE NEON LINE
           </h1>
           <h2 className="mega-subtitle mega-glow-yellow">
-            WHERE FRIENDS NEVER DIE!
+            WHERE FRIENDS NEVER DIE
           </h2>
-          <p className="text-yellow-300 text-xl mt-6 font-bold">
-            🚀 THE COOLEST SPOT FOR KIDS! 🚀
+          <p className="text-yellow-300 text-xl mt-6">
+            THE ULTIMATE GAMING DESTINATION
           </p>
         </header>
 
@@ -122,11 +131,11 @@ export default function App() {
 
         {/* FUN FOOTER */}
         <footer className="fun-footer">
-          <p className="mega-glow-yellow text-2xl font-bold">
-            🤘 PLAY EVERY DAY! 🤘
+          <p className="mega-glow-yellow text-2xl">
+            PLAY EVERY DAY
           </p>
           <p className="text-red-400 text-lg mt-2">
-            Chat with Friends • Play Awesome Games • Get Cool Stuff
+            CHAT WITH FRIENDS • PLAY AWESOME GAMES • GET COOL STUFF
           </p>
         </footer>
       </div>

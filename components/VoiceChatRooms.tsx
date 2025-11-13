@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import { Mic, MicOff, Users, Radio, LogOut } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
 import { projectId, publicAnonKey } from '../utils/supabase/info';
 
@@ -25,6 +24,7 @@ export function VoiceChatRooms() {
   const [isMuted, setIsMuted] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const [isConnecting, setIsConnecting] = useState(false);
+  const [showRoomSelection, setShowRoomSelection] = useState(false);
   
   const supabaseRef = useRef<any>(null);
   const channelRef = useRef<any>(null);
@@ -38,6 +38,13 @@ export function VoiceChatRooms() {
       publicAnonKey
     );
   }, []);
+
+  const handleNameSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (screenName.trim()) {
+      setShowRoomSelection(true);
+    }
+  };
 
   const startLocalStream = async () => {
     try {
@@ -67,19 +74,16 @@ export function VoiceChatRooms() {
       ]
     });
 
-    // Add local stream tracks
     stream.getTracks().forEach(track => {
       pc.addTrack(track, stream);
     });
 
-    // Handle incoming remote stream
     pc.ontrack = (event) => {
       const remoteAudio = new Audio();
       remoteAudio.srcObject = event.streams[0];
       remoteAudio.play().catch(e => console.error('Error playing remote audio:', e));
     };
 
-    // Handle ICE candidates
     pc.onicecandidate = (event) => {
       if (event.candidate && channelRef.current) {
         channelRef.current.send({
@@ -99,10 +103,7 @@ export function VoiceChatRooms() {
   };
 
   const joinRoom = async (roomId: string) => {
-    if (!screenName.trim()) {
-      alert('Please enter a screen name first!');
-      return;
-    }
+    if (!screenName.trim()) return;
 
     setIsConnecting(true);
     setSelectedRoom(roomId);
@@ -121,7 +122,6 @@ export function VoiceChatRooms() {
       }
     });
 
-    // Handle presence sync
     channel.on('presence', { event: 'sync' }, () => {
       const state = channel.presenceState();
       const userList: User[] = [];
@@ -140,11 +140,9 @@ export function VoiceChatRooms() {
       setUsers(userList);
     });
 
-    // Handle presence join
     channel.on('presence', { event: 'join' }, ({ newPresences }: any) => {
       newPresences.forEach((presence: any) => {
         if (presence.id !== userIdRef.current) {
-          // Create offer for new user
           const pc = createPeerConnection(presence.id, stream);
           pc.createOffer()
             .then(offer => pc.setLocalDescription(offer))
@@ -163,7 +161,6 @@ export function VoiceChatRooms() {
       });
     });
 
-    // Handle WebRTC signaling
     channel.on('broadcast', { event: 'offer' }, async ({ payload }: any) => {
       if (payload.to === userIdRef.current) {
         const pc = createPeerConnection(payload.from, stream);
@@ -217,17 +214,14 @@ export function VoiceChatRooms() {
   };
 
   const leaveRoom = async () => {
-    // Close all peer connections
     peerConnectionsRef.current.forEach(pc => pc.close());
     peerConnectionsRef.current.clear();
 
-    // Stop local stream
     if (localStreamRef.current) {
       localStreamRef.current.getTracks().forEach(track => track.stop());
       localStreamRef.current = null;
     }
 
-    // Unsubscribe from channel
     if (channelRef.current) {
       await channelRef.current.unsubscribe();
       channelRef.current = null;
@@ -236,6 +230,7 @@ export function VoiceChatRooms() {
     setSelectedRoom(null);
     setHasJoined(false);
     setUsers([]);
+    setShowRoomSelection(false);
   };
 
   const toggleMute = () => {
@@ -244,7 +239,6 @@ export function VoiceChatRooms() {
       audioTrack.enabled = !audioTrack.enabled;
       setIsMuted(!audioTrack.enabled);
       
-      // Update presence
       if (channelRef.current) {
         channelRef.current.track({
           id: userIdRef.current,
@@ -256,61 +250,98 @@ export function VoiceChatRooms() {
   };
 
   return (
-    <div className="text-center p-8">
-      <h1 className="mega-glow-yellow text-4xl mb-8">🎤 VOICE CHAT ROOMS</h1>
+    <div className="text-center p-8 matrix-font">
+      <h1 className="mega-glow-yellow text-4xl mb-8 matrix-title">VOICE CHAT ROOMS</h1>
+      
+      {/* Top Leaderboard Ad */}
+      <div className="ad-leaderboard">
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184595877548269"></script>
+        <ins className="adsbygoogle"
+             style={{display: 'inline-block', width: '728px', height: '90px'}}
+             data-ad-client="ca-pub-1184595877548269"
+             data-ad-slot="1234567890"></ins>
+      </div>
       
       {!hasJoined ? (
         <div className="space-y-6 max-w-4xl mx-auto">
-          <div className="fun-ad-container">
-            <p className="text-yellow-300 text-xl mb-4">
-              Enter your screen name and join a voice chat room!
-            </p>
-            
-            <div className="mb-6">
-              <input
-                type="text"
-                value={screenName}
-                onChange={(e) => setScreenName(e.target.value)}
-                placeholder="Enter your cool screen name..."
-                className="w-full max-w-md p-4 bg-black border-2 border-yellow-400 rounded-lg text-white text-xl text-center"
-                style={{boxShadow: '0 0 15px #ffff00'}}
-                maxLength={20}
-              />
+          {!showRoomSelection ? (
+            <div className="fun-ad-container">
+              <p className="text-yellow-300 text-xl mb-4">
+                ENTER YOUR SCREEN NAME TO JOIN VOICE CHAT
+              </p>
+              
+              <form onSubmit={handleNameSubmit} className="space-y-4">
+                <input
+                  type="text"
+                  value={screenName}
+                  onChange={(e) => setScreenName(e.target.value)}
+                  placeholder="ENTER YOUR COOL SCREEN NAME..."
+                  className="matrix-input"
+                  maxLength={20}
+                />
+                
+                <button type="submit" className="join-button">
+                  CONTINUE TO ROOMS
+                </button>
+              </form>
             </div>
-          </div>
+          ) : (
+            <>
+              <div className="fun-ad-container">
+                <p className="text-yellow-300 text-xl mb-4">
+                  WELCOME: <span className="mega-glow-red">{screenName}</span>
+                </p>
+                <p className="text-green-400 text-lg">SELECT A CHAT ROOM</p>
+              </div>
 
-          {/* Room Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {CHAT_ROOMS.map((room) => (
-              <button
-                key={room.id}
-                onClick={() => joinRoom(room.id)}
-                disabled={isConnecting || !screenName.trim()}
-                className="super-arcade-button text-2xl"
-                style={{
-                  background: 'linear-gradient(145deg, #222, #000)',
-                  border: '4px solid #ff0033',
-                  boxShadow: '0 0 30px #ff0033, inset 0 0 20px rgba(255, 0, 51, 0.2), 0 10px 0 rgba(255, 0, 51, 0.3)',
-                  color: '#ff0033'
-                }}
-              >
-                {room.emoji} {room.name}
-              </button>
-            ))}
-          </div>
+              {/* Medium Rectangle Ad */}
+              <div className="ad-medium-rectangle">
+                <ins className="adsbygoogle"
+                     style={{display: 'inline-block', width: '300px', height: '250px'}}
+                     data-ad-client="ca-pub-1184595877548269"
+                     data-ad-slot="2345678901"></ins>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {CHAT_ROOMS.map((room) => (
+                  <button
+                    key={room.id}
+                    onClick={() => joinRoom(room.id)}
+                    disabled={isConnecting}
+                    className="super-arcade-button text-xl"
+                    style={{
+                      background: 'linear-gradient(145deg, #222, #000)',
+                      border: '4px solid #ff0033',
+                      boxShadow: '0 0 30px #ff0033, inset 0 0 20px rgba(255, 0, 51, 0.2)',
+                      color: '#ff0033'
+                    }}
+                  >
+                    {room.emoji} {room.name}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       ) : (
         <div className="space-y-6 max-w-4xl mx-auto">
           <div className="fun-ad-container">
             <h2 className="text-3xl text-green-400 mb-4">
-              🎧 IN VOICE ROOM: {CHAT_ROOMS.find(r => r.id === selectedRoom)?.name?.toUpperCase()}
+              IN VOICE ROOM: {CHAT_ROOMS.find(r => r.id === selectedRoom)?.name?.toUpperCase()}
             </h2>
             <p className="text-yellow-300 text-lg">
-              Connected as: <strong>{screenName}</strong>
+              CONNECTED AS: <strong className="mega-glow-red">{screenName}</strong>
             </p>
           </div>
 
-          {/* Controls */}
+          {/* Banner Ad */}
+          <div className="ad-banner">
+            <ins className="adsbygoogle"
+                 style={{display: 'inline-block', width: '468px', height: '60px'}}
+                 data-ad-client="ca-pub-1184595877548269"
+                 data-ad-slot="3456789012"></ins>
+          </div>
+
           <div className="flex gap-4 justify-center">
             <button
               onClick={toggleMute}
@@ -343,9 +374,8 @@ export function VoiceChatRooms() {
             </button>
           </div>
 
-          {/* Users List */}
           <div className="fun-ad-container">
-            <h3 className="text-2xl text-yellow-300 mb-4">👥 USERS IN ROOM ({users.length})</h3>
+            <h3 className="text-2xl text-yellow-300 mb-4">USERS IN ROOM ({users.length})</h3>
             <div className="space-y-2">
               {users.map((user) => (
                 <div
@@ -358,24 +388,21 @@ export function VoiceChatRooms() {
               ))}
               {users.length === 0 && (
                 <p className="text-yellow-300 text-lg">
-                  Waiting for friends to join...
+                  WAITING FOR FRIENDS TO JOIN...
                 </p>
               )}
             </div>
           </div>
+
+          {/* Large Rectangle Ad */}
+          <div className="ad-large-rectangle">
+            <ins className="adsbygoogle"
+                 style={{display: 'inline-block', width: '336px', height: '280px'}}
+                 data-ad-client="ca-pub-1184595877548269"
+                 data-ad-slot="4567890123"></ins>
+          </div>
         </div>
       )}
-
-      {/* Ads */}
-      <div className="fun-ad-container mt-8">
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184595877548269" crossOrigin="anonymous"></script>
-        <ins className="adsbygoogle"
-             style={{display: 'block'}}
-             data-ad-client="ca-pub-1184595877548269"
-             data-ad-slot="voice-chat-top"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-      </div>
     </div>
   );
 }
