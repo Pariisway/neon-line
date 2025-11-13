@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  background: black;
+  color: white;
+}
+
+.mega-glow-yellow { text-shadow: 0 0 10px #ffff00, 0 0 20px #ffff00; }
+.mega-glow-red { text-shadow: 0 0 10px #ff0033, 0 0 20px #ff0033; }
+.mega-glow-green { text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00; }
+
+.floating-emoji {
+  position: absolute;
+  font-size: 2rem;
+  opacity: 0.7;
+  animation: float 8s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+  100% { transform: translateY(0px); }
+}
+
+.matrix-input {
+  padding: 12px 20px;
+  border: 2px solid #ffff00;
+  border-radius: 12px;
+  background: black;
+  color: #ffff00;
+  font-size: 1.2rem;
+  width: 80%;
+  text-align: center;
+}
+
+.join-button, .super-arcade-button {
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
