@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
-/* 90s Vintage Arcade Laser Theme */
+/* Kid-Friendly Dark Arcade Theme */
 :root {
-  --neon-cyan: #00ffff;
-  --neon-pink: #ff00ff;
-  --neon-green: #00ff00;
+  --neon-blue: #00eeff;
+  --neon-purple: #9d4dff;
+  --neon-green: #00ff88;
+  --neon-pink: #ff4da6;
   --neon-yellow: #ffff00;
-  --neon-purple: #9d00ff;
-  --dark-bg: #000000;
-  --darker-bg: #050505;
+  --dark-bg: #0a0a2a;
+  --darker-bg: #050520;
 }
 
 * {
@@ -18,187 +18,185 @@
 }
 
 body {
-  font-family: 'Courier New', 'Monaco', monospace;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: var(--dark-bg);
-  color: var(--neon-cyan);
+  color: white;
   overflow-x: hidden;
-  position: relative;
   min-height: 100vh;
 }
 
-/* Animated laser grid background */
-.laser-grid {
+/* Animated Space Background */
+.space-bg {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background: 
-    linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1%),
-    linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1%),
-    linear-gradient(90deg, rgba(255, 0, 255, 0.05) 1px, transparent 1%),
-    linear-gradient(rgba(255, 0, 255, 0.05) 1px, transparent 1%);
-  background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px;
-  background-position: 0 0, 0 0, -5px -5px, -5px -5px;
-  opacity: 0.3;
-  animation: gridMove 40s linear infinite;
+    radial-gradient(circle at 20% 50%, rgba(41, 0, 255, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 0, 212, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(0, 255, 242, 0.2) 0%, transparent 50%),
+    linear-gradient(45deg, #0a0a2a 0%, #1a1a4a 100%);
   z-index: 1;
 }
 
-@keyframes gridMove {
-  0% { transform: translate(0, 0); }
-  100% { transform: translate(50px, 50px); }
-}
-
-/* Neon text effects */
-.neon-text {
-  color: var(--neon-cyan);
-  text-shadow: 
-    0 0 5px var(--neon-cyan),
-    0 0 10px var(--neon-cyan),
-    0 0 15px var(--neon-cyan),
-    0 0 20px var(--neon-cyan),
-    0 0 35px var(--neon-cyan),
-    0 0 40px var(--neon-cyan);
-  animation: textFlicker 3s infinite alternate;
-}
-
-.neon-text-pink {
-  color: var(--neon-pink);
-  text-shadow: 
-    0 0 5px var(--neon-pink),
-    0 0 10px var(--neon-pink),
-    0 0 15px var(--neon-pink),
-    0 0 20px var(--neon-pink),
-    0 0 35px var(--neon-pink),
-    0 0 40px var(--neon-pink);
-  animation: textFlicker 2s infinite alternate;
-}
-
-.neon-text-green {
-  color: var(--neon-green);
-  text-shadow: 
-    0 0 5px var(--neon-green),
-    0 0 10px var(--neon-green),
-    0 0 15px var(--neon-green),
-    0 0 20px var(--neon-green),
-    0 0 35px var(--neon-green),
-    0 0 40px var(--neon-green);
-}
-
-@keyframes textFlicker {
-  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
-    text-shadow: 
-      0 0 5px currentColor,
-      0 0 10px currentColor,
-      0 0 15px currentColor,
-      0 0 20px currentColor,
-      0 0 35px currentColor,
-      0 0 40px currentColor;
-    opacity: 1;
-  }
-  20%, 24%, 55% {
-    text-shadow: none;
-    opacity: 0.9;
-  }
-}
-
-/* Scan lines effect */
-.scan-lines {
+/* Floating Stars */
+.stars {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    to bottom,
-    transparent 50%,
-    rgba(0, 255, 255, 0.03) 50%
-  );
-  background-size: 100% 4px;
-  pointer-events: none;
   z-index: 2;
-  animation: scanMove 10s linear infinite;
 }
 
-@keyframes scanMove {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100%); }
+.star {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  animation: twinkle 3s infinite;
 }
 
-/* CRT screen curvature effect */
-.crt-effect::before {
-  content: "";
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* Floating Game Characters */
+.floating-characters {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(
-    ellipse at center,
-    transparent 0%,
-    transparent 40%,
-    rgba(0, 0, 0, 0.3) 100%
-  );
   pointer-events: none;
   z-index: 3;
 }
 
-/* Container styling */
-.content-section {
-  background: rgba(0, 0, 0, 0.8);
+.character {
+  position: absolute;
+  font-size: 2rem;
+  animation: float 6s infinite ease-in-out;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(5deg); }
+}
+
+/* Neon Glow Effects */
+.neon-glow {
+  color: var(--neon-blue);
+  text-shadow: 
+    0 0 10px var(--neon-blue),
+    0 0 20px var(--neon-blue),
+    0 0 30px var(--neon-blue);
+  animation: glowPulse 2s infinite alternate;
+}
+
+.neon-glow-purple {
+  color: var(--neon-purple);
+  text-shadow: 
+    0 0 10px var(--neon-purple),
+    0 0 20px var(--neon-purple),
+    0 0 30px var(--neon-purple);
+}
+
+.neon-glow-green {
+  color: var(--neon-green);
+  text-shadow: 
+    0 0 10px var(--neon-green),
+    0 0 20px var(--neon-green),
+    0 0 30px var(--neon-green);
+}
+
+@keyframes glowPulse {
+  0% { opacity: 0.8; }
+  100% { opacity: 1; }
+}
+
+/* Arcade Container */
+.arcade-container {
+  background: rgba(10, 10, 40, 0.8);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 255, 255, 0.3);
-  border-radius: 15px;
-  padding: 2rem;
+  border: 3px solid var(--neon-blue);
+  border-radius: 20px;
+  box-shadow: 
+    0 0 20px var(--neon-blue),
+    inset 0 0 20px rgba(0, 238, 255, 0.1);
   position: relative;
   z-index: 10;
 }
 
-/* Ad container styling */
-.ad-container {
-  background: rgba(0, 255, 255, 0.05);
-  border: 1px solid var(--neon-cyan);
-  border-radius: 8px;
-  padding: 1rem;
-  position: relative;
-  z-index: 10;
-}
-
-/* Button styling */
-.neon-button {
-  background: transparent;
-  border: 1px solid var(--neon-cyan);
-  color: var(--neon-cyan);
-  padding: 0.75rem 1.5rem;
-  border-radius: 5px;
-  font-family: 'Courier New', monospace;
+/* Kid-Friendly Buttons */
+.arcade-button {
+  background: linear-gradient(145deg, #2a2a5a, #1a1a3a);
+  border: 2px solid var(--neon-blue);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 1.1rem;
   font-weight: bold;
-  text-shadow: 0 0 5px var(--neon-cyan);
-  box-shadow: 0 0 10px var(--neon-cyan);
+  text-shadow: 0 0 5px var(--neon-blue);
+  box-shadow: 
+    0 0 15px var(--neon-blue),
+    inset 0 2px 0 rgba(255,255,255,0.2);
   transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
   cursor: pointer;
 }
 
-.neon-button:hover {
-  background: rgba(0, 255, 255, 0.1);
-  box-shadow: 0 0 20px var(--neon-cyan);
-  transform: translateY(-2px);
+.arcade-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 
+    0 0 25px var(--neon-blue),
+    inset 0 2px 0 rgba(255,255,255,0.3);
+  background: linear-gradient(145deg, #3a3a6a, #2a2a4a);
 }
 
-.neon-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.4), transparent);
-  transition: left 0.5s;
+.arcade-button:active {
+  transform: translateY(1px);
 }
 
-.neon-button:hover::before {
-  left: 100%;
+/* Ad Container */
+.ad-container {
+  background: rgba(0, 238, 255, 0.1);
+  border: 2px solid var(--neon-blue);
+  border-radius: 12px;
+  padding: 15px;
+  margin: 20px 0;
+  position: relative;
+  z-index: 10;
+}
+
+/* Game Grid */
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.game-card {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid var(--neon-purple);
+  border-radius: 15px;
+  padding: 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.game-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 20px var(--neon-purple);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .game-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .character {
+    font-size: 1.5rem;
+  }
 }
