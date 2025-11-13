@@ -21,7 +21,7 @@ function TopNavigation({ currentPage, setCurrentPage }: { currentPage: string, s
             className="nav-button"
             onClick={() => setCurrentPage('voice-chat')}
           >
-            🎤 VOICE CHAT
+            🎤 CHAT
           </button>
         </li>
         <li>
@@ -29,7 +29,7 @@ function TopNavigation({ currentPage, setCurrentPage }: { currentPage: string, s
             className="nav-button"
             onClick={() => setCurrentPage('arcade')}
           >
-            🎮 ARCADE
+            🎮 GAMES
           </button>
         </li>
         <li>
@@ -37,7 +37,7 @@ function TopNavigation({ currentPage, setCurrentPage }: { currentPage: string, s
             className="nav-button"
             onClick={() => setCurrentPage('merch-shop')}
           >
-            👕 MERCH SHOP
+            👕 SHOP
           </button>
         </li>
       </ul>
@@ -49,26 +49,10 @@ function TopNavigation({ currentPage, setCurrentPage }: { currentPage: string, s
 function AdSenseBanner() {
   return (
     <div className="adsense-banner">
-      <div className="text-white text-lg font-bold mb-2">Advertisement</div>
-      <div className="bg-gray-800 p-4 rounded-lg text-white">
-        {/* Replace with actual AdSense code */}
-        <p className="text-yellow-400">AdSense Placement - 728x90</p>
-        <p className="text-sm">Your ad could be here!</p>
-      </div>
-    </div>
-  );
-}
-
-function AdSenseSidebar() {
-  return (
-    <div className="adsense-sidebar">
-      <div className="text-center">
-        <div className="text-white text-lg font-bold mb-2">Advertisement</div>
-        <div className="bg-gray-800 p-4 rounded-lg text-white">
-          {/* Replace with actual AdSense code */}
-          <p className="text-yellow-400">AdSense Placement - 300x600</p>
-          <p className="text-sm">Your ad could be here!</p>
-        </div>
+      <div className="text-white text-sm font-bold mb-1">Advertisement</div>
+      <div className="bg-gray-800 p-2 rounded-lg text-white text-xs">
+        <p className="text-yellow-400">AdSense Placement</p>
+        <p>Your ad could be here!</p>
       </div>
     </div>
   );
@@ -76,13 +60,29 @@ function AdSenseSidebar() {
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<string>('home');
+  const [isMobile, setIsMobile] = useState<boolean>(false);
 
-  // Create floating emojis
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Create floating emojis - fewer on mobile
   useEffect(() => {
     const container = document.querySelector('.floating-emojis');
     if (container) {
-      const emojis = ['🎮', '👾', '🚀', '⭐', '🎯', '👻', '🦄', '🐲', '🤖', '🎪', '🎨', '🌈'];
-      for (let i = 0; i < 20; i++) {
+      container.innerHTML = ''; // Clear existing
+      const emojis = ['🎮', '👾', '🚀', '⭐', '🎯', '👻'];
+      const emojiCount = isMobile ? 8 : 20;
+      
+      for (let i = 0; i < emojiCount; i++) {
         const emoji = document.createElement('div');
         emoji.className = 'floating-emoji';
         emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
@@ -93,7 +93,7 @@ export default function App() {
         container.appendChild(emoji);
       }
     }
-  }, []);
+  }, [isMobile]);
 
   const renderPage = () => {
     switch (currentPage) {
@@ -115,11 +115,13 @@ export default function App() {
             
             {/* MAIN ARCADE AREA */}
             <div className="main-arcade-area">
-              <div className="center-content w-full">
-                <h2 className="text-3xl text-yellow-400 mb-8 mega-glow-yellow">CHOOSE YOUR DESTINATION</h2>
+              <div className="center-content w-full px-4">
+                <h2 className="text-2xl md:text-3xl text-yellow-400 mb-6 md:mb-8 mega-glow-yellow">
+                  CHOOSE YOUR DESTINATION
+                </h2>
                 
                 {/* THREE GIANT ARCADE BUTTONS */}
-                <div className="arcade-button-grid">
+                <div className="arcade-button-grid w-full">
                   <button 
                     className="super-arcade-button"
                     onClick={() => setCurrentPage('voice-chat')}
@@ -170,7 +172,7 @@ export default function App() {
             <h2 className="mega-subtitle mega-glow-yellow">
               WHERE FRIENDS NEVER DIE
             </h2>
-            <p className="text-yellow-300 text-xl mt-6">
+            <p className="text-yellow-300 text-sm md:text-xl mt-4 md:mt-6">
               THE ULTIMATE GAMING DESTINATION
             </p>
           </header>
@@ -183,13 +185,13 @@ export default function App() {
 
         {/* FUN FOOTER */}
         <footer className="fun-footer">
-          <p className="mega-glow-yellow text-2xl">
+          <p className="mega-glow-yellow text-lg md:text-2xl">
             PLAY EVERY DAY
           </p>
-          <p className="text-red-400 text-lg mt-2">
-            CHAT WITH FRIENDS • PLAY AWESOME GAMES • GET COOL STUFF
+          <p className="text-red-400 text-sm md:text-lg mt-2">
+            CHAT • GAMES • MERCH
           </p>
-          <div className="mt-4">
+          <div className="mt-3">
             <AdSenseBanner />
           </div>
         </footer>
