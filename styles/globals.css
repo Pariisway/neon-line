@@ -1,13 +1,15 @@
 @import "tailwindcss";
 
-/* Tron Legacy Inspired Theme */
+/* Tron Inspired Theme - Black/Orange/Red */
 :root {
-  --tron-blue: #00f0ff;
   --tron-orange: #ff4d00;
+  --tron-red: #ff0033;
+  --tron-dark-red: #cc0022;
   --tron-white: #ffffff;
-  --tron-dark: #0a0a1a;
-  --tron-darker: #050510;
-  --tron-grid: #003333;
+  --tron-black: #000000;
+  --tron-dark: #0a0a0a;
+  --tron-darker: #050505;
+  --tron-grid: #331100;
 }
 
 * {
@@ -18,7 +20,7 @@
 
 body {
   font-family: 'Orbitron', 'Segoe UI', sans-serif;
-  background: var(--tron-darker);
+  background: var(--tron-black);
   color: var(--tron-white);
   overflow-x: hidden;
   min-height: 100vh;
@@ -36,7 +38,7 @@ body {
     linear-gradient(var(--tron-grid) 1px, transparent 1px);
   background-size: 50px 50px;
   background-position: 0 0;
-  animation: gridMove 20s linear infinite;
+  animation: gridMove 30s linear infinite;
   z-index: 1;
 }
 
@@ -47,69 +49,74 @@ body {
 
 /* Tron Glow Effects */
 .tron-glow {
-  color: var(--tron-blue);
-  text-shadow: 
-    0 0 10px var(--tron-blue),
-    0 0 20px var(--tron-blue),
-    0 0 30px var(--tron-blue),
-    0 0 40px var(--tron-blue);
-}
-
-.tron-glow-orange {
   color: var(--tron-orange);
   text-shadow: 
     0 0 10px var(--tron-orange),
     0 0 20px var(--tron-orange),
-    0 0 30px var(--tron-orange);
+    0 0 30px var(--tron-orange),
+    0 0 40px var(--tron-orange);
+}
+
+.tron-glow-red {
+  color: var(--tron-red);
+  text-shadow: 
+    0 0 10px var(--tron-red),
+    0 0 20px var(--tron-red),
+    0 0 30px var(--tron-red);
 }
 
 .tron-border {
-  border: 2px solid var(--tron-blue);
-  box-shadow: 
-    0 0 15px var(--tron-blue),
-    inset 0 0 15px var(--tron-blue);
-  background: rgba(0, 240, 255, 0.05);
-}
-
-.tron-border-orange {
   border: 2px solid var(--tron-orange);
   box-shadow: 
     0 0 15px var(--tron-orange),
-    inset 0 0 15px rgba(255, 77, 0, 0.1);
+    inset 0 0 15px var(--tron-orange);
+  background: rgba(255, 77, 0, 0.05);
+}
+
+.tron-border-red {
+  border: 2px solid var(--tron-red);
+  box-shadow: 
+    0 0 15px var(--tron-red),
+    inset 0 0 15px rgba(255, 0, 51, 0.1);
 }
 
 /* Tron Style Text */
 .tron-text {
   font-family: 'Orbitron', monospace;
   font-weight: 900;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
   text-transform: uppercase;
 }
 
 /* Main Container */
 .tron-container {
-  background: rgba(10, 10, 26, 0.9);
+  background: rgba(10, 10, 10, 0.95);
   backdrop-filter: blur(10px);
-  border: 3px solid var(--tron-blue);
+  border: 3px solid var(--tron-orange);
   border-radius: 0;
   box-shadow: 
-    0 0 30px var(--tron-blue),
-    inset 0 0 30px rgba(0, 240, 255, 0.1);
+    0 0 30px var(--tron-orange),
+    inset 0 0 30px rgba(255, 77, 0, 0.1);
   position: relative;
   z-index: 10;
 }
 
-/* Tron Icon Buttons */
+/* Tron Icon Buttons - Fixed to be clickable */
 .tron-icon {
-  background: rgba(0, 240, 255, 0.1);
-  border: 2px solid var(--tron-blue);
-  border-radius: 10px;
-  padding: 30px;
+  background: rgba(255, 77, 0, 0.1);
+  border: 2px solid var(--tron-orange);
+  border-radius: 8px;
+  padding: 40px 30px;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .tron-icon::before {
@@ -119,7 +126,7 @@ body {
   left: -50%;
   width: 200%;
   height: 200%;
-  background: linear-gradient(45deg, transparent, rgba(0, 240, 255, 0.2), transparent);
+  background: linear-gradient(45deg, transparent, rgba(255, 77, 0, 0.2), transparent);
   transform: rotate(45deg);
   transition: all 0.5s ease;
 }
@@ -127,9 +134,9 @@ body {
 .tron-icon:hover {
   transform: translateY(-10px) scale(1.05);
   box-shadow: 
-    0 0 30px var(--tron-blue),
+    0 0 30px var(--tron-orange),
     0 10px 30px rgba(0, 0, 0, 0.5);
-  background: rgba(0, 240, 255, 0.15);
+  background: rgba(255, 77, 0, 0.15);
 }
 
 .tron-icon:hover::before {
@@ -143,73 +150,105 @@ body {
 /* Icon Styles */
 .icon-voice::before {
   content: '🎤';
-  font-size: 3rem;
+  font-size: 4rem;
   display: block;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .icon-arcade::before {
   content: '🎮';
-  font-size: 3rem;
+  font-size: 4rem;
   display: block;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .icon-merch::before {
   content: '👕';
-  font-size: 3rem;
+  font-size: 4rem;
   display: block;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 /* Ad Container */
 .ad-container {
-  background: rgba(0, 240, 255, 0.1);
-  border: 2px solid var(--tron-blue);
-  padding: 20px;
-  margin: 30px auto;
+  background: rgba(255, 77, 0, 0.1);
+  border: 2px solid var(--tron-orange);
+  padding: 25px;
+  margin: 40px auto;
   position: relative;
   z-index: 10;
   text-align: center;
+  max-width: 800px;
 }
 
-/* Grid Layout */
+/* Grid Layout - Centered Icons */
 .icons-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 30px;
-  padding: 40px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 40px;
+  padding: 60px 40px;
   max-width: 1200px;
   margin: 0 auto;
+  align-items: center;
+  justify-items: center;
+}
+
+/* Scan Line Effect - Dark Red & Slower */
+.scan-line {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--tron-dark-red);
+  box-shadow: 
+    0 0 15px var(--tron-red),
+    0 0 30px var(--tron-red);
+  animation: scan 6s linear infinite;
+  z-index: 5;
+}
+
+@keyframes scan {
+  0% { top: 0%; opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { top: 100%; opacity: 0.8; }
+}
+
+/* Header Styles */
+.main-header {
+  position: relative;
+  z-index: 20;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+/* Content Area - Push icons to middle */
+.content-area {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 10;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .icons-grid {
     grid-template-columns: 1fr;
-    gap: 20px;
-    padding: 20px;
+    gap: 30px;
+    padding: 40px 20px;
   }
   
   .tron-icon {
-    padding: 20px;
+    padding: 30px 20px;
+    min-height: 180px;
   }
-}
-
-/* Scan Line Effect */
-.scan-line {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: var(--tron-blue);
-  box-shadow: 0 0 10px var(--tron-blue);
-  animation: scan 3s linear infinite;
-  z-index: 5;
-}
-
-@keyframes scan {
-  0% { top: 0%; }
-  100% { top: 100%; }
+  
+  .icon-voice::before,
+  .icon-arcade::before,
+  .icon-merch::before {
+    font-size: 3rem;
+  }
 }
