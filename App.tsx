@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import Header from './components/Header';
-import HomePage from './components/HomePage';
-import VoiceChatRooms from './components/VoiceChatRooms';
-import ArcadeRoom from './components/ArcadeRoom';
-import Marketplace from './components/Marketplace';
+import { Header } from './components/Header';
+import { HomePage } from './components/HomePage';
+import { VoiceChatRooms } from './components/VoiceChatRooms';
+import { ArcadeRoom } from './components/ArcadeRoom';
+import { Marketplace } from './components/Marketplace';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<string>('home');
