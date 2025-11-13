@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* SUPER FUN KID ARCADE THEME */
 :root {
@@ -363,19 +365,4 @@ body {
     width: 320px;
     height: 100px;
   }
-}
-
-/* ADD SOME SPARKLES */
-.sparkle {
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  background: white;
-  border-radius: 50%;
-  animation: sparkle 3s infinite;
-}
-
-@keyframes sparkle {
-  0%, 100% { opacity: 0; transform: scale(0); }
-  50% { opacity: 1; transform: scale(1); }
 }
