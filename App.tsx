@@ -45,13 +45,25 @@ function TopNavigation({ currentPage, setCurrentPage }: { currentPage: string, s
   );
 }
 
-// AdSense Component
-function AdSenseBanner() {
+// AdSense Components - Top and Bottom Only
+function AdSenseTop() {
   return (
-    <div className="adsense-banner">
+    <div className="adsense-top">
       <div className="text-white text-sm font-bold mb-1">Advertisement</div>
       <div className="bg-gray-800 p-2 rounded-lg text-white text-xs">
-        <p className="text-yellow-400">AdSense Placement</p>
+        <p className="text-yellow-400">Top Ad Placement</p>
+        <p>Your ad could be here!</p>
+      </div>
+    </div>
+  );
+}
+
+function AdSenseBottom() {
+  return (
+    <div className="adsense-bottom">
+      <div className="text-white text-sm font-bold mb-1">Advertisement</div>
+      <div className="bg-gray-800 p-2 rounded-lg text-white text-xs">
+        <p className="text-yellow-400">Bottom Ad Placement</p>
         <p>Your ad could be here!</p>
       </div>
     </div>
@@ -105,15 +117,12 @@ export default function App() {
         return <Marketplace />;
       default:
         return (
-          <div className="min-h-screen flex flex-col">
+          <div className="page-content">
             {/* ANIMATED BACKGROUND */}
             <div className="particle-bg"></div>
             <div className="floating-emojis"></div>
             
-            {/* ADVERTISEMENT BANNER */}
-            <AdSenseBanner />
-            
-            {/* MAIN ARCADE AREA */}
+            {/* MAIN ARCADE AREA - Centered content only */}
             <div className="main-arcade-area">
               <div className="center-content w-full px-4">
                 <h2 className="text-2xl md:text-3xl text-yellow-400 mb-6 md:mb-8 mega-glow-yellow">
@@ -145,9 +154,6 @@ export default function App() {
                 </div>
               </div>
             </div>
-            
-            {/* BOTTOM ADVERTISEMENT */}
-            <AdSenseBanner />
           </div>
         );
     }
@@ -163,6 +169,9 @@ export default function App() {
       <TopNavigation currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
       <div className="relative z-10 min-h-screen flex flex-col">
+        {/* TOP AD - Only on home page */}
+        {currentPage === 'home' && <AdSenseTop />}
+
         {/* MEGA HEADER - Only show on home page */}
         {currentPage === 'home' && (
           <header className="mega-header">
@@ -178,10 +187,13 @@ export default function App() {
           </header>
         )}
 
-        {/* MAIN CONTENT */}
-        <main className="flex-1">
+        {/* MAIN CONTENT - Centered properly */}
+        <main className="flex-1 flex flex-col items-center">
           {renderPage()}
         </main>
+
+        {/* BOTTOM AD - On all pages */}
+        <AdSenseBottom />
 
         {/* FUN FOOTER */}
         <footer className="fun-footer">
@@ -191,9 +203,6 @@ export default function App() {
           <p className="text-red-400 text-sm md:text-lg mt-2">
             VOICE CHAT • YOUR GAMES • YOUR MERCH
           </p>
-          <div className="mt-3">
-            <AdSenseBanner />
-          </div>
         </footer>
       </div>
     </div>

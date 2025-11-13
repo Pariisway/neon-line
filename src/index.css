@@ -31,6 +31,8 @@ body {
 #root {
   min-height: 100vh;
   min-height: -webkit-fill-available;
+  display: flex;
+  flex-direction: column;
 }
 
 .matrix-font {
@@ -53,6 +55,13 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
+  width: 100%;
+}
+
+.page-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   width: 100%;
 }
 
@@ -101,14 +110,27 @@ body {
   transform: scale(1.05);
 }
 
-/* AdSense Placements - Mobile */
-.adsense-banner {
+/* AdSense Placements - Mobile - TOP AND BOTTOM ONLY */
+.adsense-top {
   width: 100%;
   background: #1a1a1a;
   border: 2px solid #ffff00;
   padding: 0.75rem;
-  margin: 0.5rem 0;
   text-align: center;
+  margin-top: 60px; /* Below navigation */
+}
+
+.adsense-bottom {
+  width: 100%;
+  background: #1a1a1a;
+  border: 2px solid #ffff00;
+  padding: 0.75rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.adsense-banner {
+  display: none; /* Hide middle ads on mobile */
 }
 
 .adsense-sidebar {
@@ -169,12 +191,13 @@ body {
   background: linear-gradient(135deg, #ff0000, #0000ff, #00ff00, #ffff00);
   background-size: 400% 400%;
   animation: gradientShift 8s ease infinite;
-  padding: 5rem 1rem 2rem;
+  padding: 1rem 1rem 2rem;
   text-align: center;
   border-bottom: 6px solid #ffff00;
   position: relative;
   z-index: 10;
-  margin-top: 50px;
+  margin-top: 0;
+  width: 100%;
 }
 
 @keyframes gradientShift {
@@ -225,6 +248,7 @@ body {
   padding: 2rem 1rem;
   max-width: 100%;
   margin: 0 auto;
+  width: 100%;
 }
 
 .super-arcade-button {
@@ -283,6 +307,8 @@ body {
   position: relative;
   z-index: 5;
   padding: 1rem;
+  width: 100%;
+  flex: 1;
 }
 
 /* Chat Room Styles - Mobile */
@@ -293,6 +319,7 @@ body {
   max-width: 100%;
   margin: 1rem auto;
   padding: 0 1rem;
+  width: 100%;
 }
 
 .chat-rooms {
@@ -300,12 +327,14 @@ body {
   border: 3px solid #00ff00;
   border-radius: 12px;
   padding: 1rem;
+  width: 100%;
 }
 
 .room-list {
   display: grid;
   gap: 0.75rem;
   margin-top: 0.75rem;
+  width: 100%;
 }
 
 .room-item {
@@ -315,6 +344,7 @@ body {
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
+  width: 100%;
 }
 
 .room-item:hover {
@@ -330,11 +360,22 @@ body {
   border-top: 4px solid #ffff00;
   position: relative;
   z-index: 10;
+  width: 100%;
 }
 
 .fun-footer p {
   font-size: 1rem;
   line-height: 1.4;
+}
+
+/* Content wrapper for proper centering */
+.content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 0 1rem;
 }
 
 /* Tablet Styles */
@@ -368,8 +409,14 @@ body {
     gap: 1.5rem;
   }
   
-  .adsense-sidebar {
-    display: flex;
+  .adsense-banner {
+    display: block; /* Show middle ads on tablet/desktop */
+    width: 100%;
+    background: #1a1a1a;
+    border: 2px solid #ffff00;
+    padding: 1rem;
+    margin: 1rem 0;
+    text-align: center;
   }
 }
 
@@ -414,6 +461,10 @@ body {
   .floating-emoji {
     font-size: 24px;
   }
+  
+  .adsense-sidebar {
+    display: flex;
+  }
 }
 
 /* Very small mobile devices */
@@ -457,4 +508,23 @@ html, body {
 
 * {
   -webkit-overflow-scrolling: touch;
+}
+
+/* Ensure everything is properly centered on mobile */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .main-arcade-area > div {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  /* Remove any side margins on mobile */
+  .mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
