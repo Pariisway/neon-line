@@ -1,13 +1,14 @@
 @import "tailwindcss";
 
-/* THE LAST NEON Theme - Based on Figma Design */
+/* SUPER FUN KID ARCADE THEME */
 :root {
-  --neon-pink: #ff00ff;
-  --neon-cyan: #00ffff;
-  --neon-green: #00ff00;
+  --neon-red: #ff0033;
   --neon-yellow: #ffff00;
-  --dark-bg: #0a0a0a;
-  --card-bg: #1a1a1a;
+  --neon-green: #00ff00;
+  --neon-blue: #00ffff;
+  --neon-pink: #ff00ff;
+  --black: #000000;
+  --dark-gray: #111111;
 }
 
 * {
@@ -17,130 +18,271 @@
 }
 
 body {
-  font-family: 'Arial', 'Helvetica', sans-serif;
-  background: var(--dark-bg);
+  font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', 'Segoe UI', sans-serif;
+  background: var(--black);
   color: white;
-  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
 }
 
-/* Neon Text Effects */
-.neon-text {
-  color: var(--neon-pink);
+/* ANIMATED PARTICLE BACKGROUND */
+.particle-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(255, 0, 51, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 0, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(255, 0, 51, 0.1) 0%, transparent 50%),
+    var(--black);
+  z-index: 1;
+}
+
+/* FLOATING EMOJIS AND GAME CHARACTERS */
+.floating-emojis {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.floating-emoji {
+  position: absolute;
+  font-size: 2.5rem;
+  animation: floatAround 8s infinite ease-in-out;
+  filter: drop-shadow(0 0 10px currentColor);
+}
+
+@keyframes floatAround {
+  0%, 100% { 
+    transform: translate(0, 0) rotate(0deg) scale(1); 
+  }
+  25% { 
+    transform: translate(20px, -15px) rotate(5deg) scale(1.1); 
+  }
+  50% { 
+    transform: translate(-15px, 10px) rotate(-5deg) scale(0.9); 
+  }
+  75% { 
+    transform: translate(10px, 15px) rotate(3deg) scale(1.05); 
+  }
+}
+
+/* MEGA GLOW TEXT EFFECTS */
+.mega-glow-red {
+  color: var(--neon-red);
   text-shadow: 
-    0 0 10px var(--neon-pink),
-    0 0 20px var(--neon-pink),
-    0 0 30px var(--neon-pink);
+    0 0 20px var(--neon-red),
+    0 0 40px var(--neon-red),
+    0 0 60px var(--neon-red),
+    0 0 80px var(--neon-red),
+    0 0 100px var(--neon-red);
+  animation: megaPulseRed 1.5s infinite alternate;
 }
 
-.neon-cyan {
-  color: var(--neon-cyan);
+.mega-glow-yellow {
+  color: var(--neon-yellow);
   text-shadow: 
-    0 0 10px var(--neon-cyan),
-    0 0 20px var(--neon-cyan);
+    0 0 20px var(--neon-yellow),
+    0 0 40px var(--neon-yellow),
+    0 0 60px var(--neon-yellow),
+    0 0 80px var(--neon-yellow),
+    0 0 100px var(--neon-yellow);
+  animation: megaPulseYellow 2s infinite alternate;
 }
 
-.neon-green {
-  color: var(--neon-green);
-  text-shadow: 
-    0 0 10px var(--neon-green),
-    0 0 20px var(--neon-green);
+@keyframes megaPulseRed {
+  0% { 
+    text-shadow: 
+      0 0 20px var(--neon-red),
+      0 0 40px var(--neon-red),
+      0 0 60px var(--neon-red),
+      0 0 80px var(--neon-red);
+    transform: scale(1);
+  }
+  100% { 
+    text-shadow: 
+      0 0 30px var(--neon-red),
+      0 0 60px var(--neon-red),
+      0 0 90px var(--neon-red),
+      0 0 120px var(--neon-red);
+    transform: scale(1.02);
+  }
 }
 
-/* Card Styles */
-.feature-card {
-  background: var(--card-bg);
-  border: 1px solid var(--neon-cyan);
-  border-radius: 8px;
-  padding: 2rem;
-  margin: 1rem 0;
+@keyframes megaPulseYellow {
+  0% { 
+    text-shadow: 
+      0 0 20px var(--neon-yellow),
+      0 0 40px var(--neon-yellow),
+      0 0 60px var(--neon-yellow),
+      0 0 80px var(--neon-yellow);
+    transform: scale(1);
+  }
+  100% { 
+    text-shadow: 
+      0 0 30px var(--neon-yellow),
+      0 0 60px var(--neon-yellow),
+      0 0 90px var(--neon-yellow),
+      0 0 120px var(--neon-yellow);
+    transform: scale(1.02);
+  }
 }
 
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  margin: 2rem 0;
-}
-
-.stat-item {
-  text-align: center;
-  padding: 1rem;
-}
-
-/* Button Styles */
-.enter-button {
-  background: transparent;
-  border: 2px solid var(--neon-pink);
-  color: var(--neon-pink);
-  padding: 0.5rem 2rem;
-  border-radius: 25px;
-  font-weight: bold;
+/* SUPER FUN ARCADE BUTTONS */
+.super-arcade-button {
+  background: linear-gradient(145deg, #222, #000);
+  border: 4px solid var(--neon-yellow);
+  color: var(--neon-yellow);
+  padding: 25px 40px;
+  border-radius: 20px;
+  font-size: 2.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  text-shadow: 0 0 15px var(--neon-yellow);
+  box-shadow: 
+    0 0 30px var(--neon-yellow),
+    inset 0 0 20px rgba(255, 255, 0, 0.2),
+    0 10px 0 rgba(255, 255, 0, 0.3);
+  transition: all 0.2s ease;
   cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 1rem;
+  position: relative;
+  overflow: hidden;
+  margin: 15px;
+  min-width: 350px;
 }
 
-.enter-button:hover {
-  background: var(--neon-pink);
-  color: black;
-  box-shadow: 0 0 20px var(--neon-pink);
+.super-arcade-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 0, 0.4), transparent);
+  transition: left 0.5s;
 }
 
-/* List Styles */
-.feature-list {
-  list-style: none;
-  margin: 1rem 0;
+.super-arcade-button:hover {
+  transform: translateY(-8px) scale(1.1);
+  box-shadow: 
+    0 0 50px var(--neon-yellow),
+    inset 0 0 30px rgba(255, 255, 0, 0.3),
+    0 15px 0 rgba(255, 255, 0, 0.4);
+  background: linear-gradient(145deg, #333, #111);
 }
 
-.feature-list li {
-  padding: 0.25rem 0;
-  color: #ccc;
+.super-arcade-button:hover::before {
+  left: 100%;
 }
 
-/* Header Styles */
-.main-header {
+.super-arcade-button:active {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 
+    0 0 30px var(--neon-yellow),
+    inset 0 0 20px rgba(255, 255, 0, 0.3),
+    0 5px 0 rgba(255, 255, 0, 0.4);
+}
+
+/* AD CONTAINERS */
+.fun-ad-container {
+  background: rgba(255, 255, 0, 0.15);
+  border: 3px solid var(--neon-yellow);
+  border-radius: 15px;
+  padding: 25px;
+  margin: 30px auto;
+  position: relative;
+  z-index: 10;
   text-align: center;
-  padding: 3rem 1rem;
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  max-width: 800px;
+  box-shadow: 0 0 30px var(--neon-yellow);
 }
 
-.tagline {
-  color: #888;
-  font-size: 1.2rem;
-  margin: 1rem 0;
+/* MAIN CONTENT AREA */
+.main-arcade-area {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+  padding: 40px 20px;
 }
 
-/* Section Styles */
-.section {
-  margin: 3rem auto;
-  max-width: 1200px;
-  padding: 0 1rem;
+/* BUTTON GRID */
+.arcade-button-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  align-items: center;
+  margin: 50px 0;
 }
 
-.section-title {
-  color: var(--neon-cyan);
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  border-bottom: 1px solid var(--neon-cyan);
-  padding-bottom: 0.5rem;
-}
-
-/* Footer */
-.footer {
+/* HEADER STYLES */
+.mega-header {
   text-align: center;
-  padding: 2rem;
-  background: #111;
-  margin-top: 3rem;
-  color: #666;
+  padding: 40px 20px;
+  position: relative;
+  z-index: 20;
 }
 
-/* Responsive */
+.mega-title {
+  font-size: 5rem;
+  font-weight: 900;
+  margin-bottom: 10px;
+  line-height: 1.1;
+}
+
+.mega-subtitle {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-top: 20px;
+  line-height: 1.1;
+}
+
+/* FOOTER */
+.fun-footer {
+  text-align: center;
+  padding: 30px 20px;
+  background: rgba(255, 0, 51, 0.1);
+  border-top: 3px solid var(--neon-red);
+  margin-top: 40px;
+}
+
+/* RESPONSIVE */
 @media (max-width: 768px) {
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .mega-title {
+    font-size: 3.5rem;
   }
   
-  .feature-card {
-    padding: 1rem;
+  .mega-subtitle {
+    font-size: 2.2rem;
   }
+  
+  .super-arcade-button {
+    font-size: 2rem;
+    padding: 20px 30px;
+    min-width: 300px;
+  }
+}
+
+/* ADD SOME SPARKLES */
+.sparkle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: white;
+  border-radius: 50%;
+  animation: sparkle 3s infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0); }
+  50% { opacity: 1; transform: scale(1); }
 }
