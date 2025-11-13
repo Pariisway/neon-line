@@ -1,0 +1,329 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Press+Start+2P&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Orbitron', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #000;
+  overflow-x: hidden;
+}
+
+.matrix-font {
+  font-family: 'Orbitron', 'Press Start 2P', monospace;
+}
+
+/* Centering utilities */
+.center-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Navigation Menu */
+.top-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(90deg, #ff0000, #0000ff, #00ff00, #ffff00);
+  padding: 1rem 2rem;
+  z-index: 1000;
+  border-bottom: 4px solid #ffff00;
+}
+
+.nav-menu {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-button {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  border: 2px solid #ffff00;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+
+.nav-button:hover {
+  background: #ffff00;
+  color: #000;
+  transform: scale(1.1);
+}
+
+/* AdSense Placements */
+.adsense-banner {
+  width: 100%;
+  background: #1a1a1a;
+  border: 2px solid #ffff00;
+  padding: 1rem;
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.adsense-sidebar {
+  background: #1a1a1a;
+  border: 2px solid #00ff00;
+  padding: 1rem;
+  margin: 1rem;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Animated Background */
+.particle-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(255, 0, 0, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(255, 255, 0, 0.1) 0%, transparent 50%);
+  animation: pulseBackground 8s ease-in-out infinite;
+  z-index: 0;
+}
+
+@keyframes pulseBackground {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+
+/* Floating Emojis */
+.floating-emojis {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.floating-emoji {
+  position: absolute;
+  font-size: 24px;
+  animation: float 8s ease-in-out infinite;
+  text-shadow: 0 0 10px currentColor;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-20px) rotate(180deg);
+    opacity: 1;
+  }
+}
+
+/* Mega Header Styles */
+.mega-header {
+  background: linear-gradient(135deg, #ff0000, #0000ff, #00ff00, #ffff00);
+  background-size: 400% 400%;
+  animation: gradientShift 8s ease infinite;
+  padding: 6rem 2rem 3rem;
+  text-align: center;
+  border-bottom: 8px solid #ffff00;
+  position: relative;
+  z-index: 10;
+  margin-top: 60px;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.mega-title {
+  font-size: 3rem;
+  font-weight: 900;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+}
+
+.mega-subtitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 1rem 0 0 0;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+.mega-glow-red {
+  text-shadow: 
+    0 0 10px #ff0000,
+    0 0 20px #ff0000,
+    0 0 30px #ff0000,
+    0 0 40px #ff0000;
+  color: #ffffff;
+}
+
+.mega-glow-yellow {
+  text-shadow: 
+    0 0 10px #ffff00,
+    0 0 20px #ffff00,
+    0 0 30px #ffff00,
+    0 0 40px #ffff00;
+  color: #ffffff;
+}
+
+/* Super Arcade Buttons */
+.arcade-button-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.super-arcade-button {
+  background: linear-gradient(45deg, #ff0000, #0000ff);
+  border: 6px solid #ffff00;
+  border-radius: 20px;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 900;
+  padding: 2rem 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  animation: buttonPulse 2s ease-in-out infinite;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  box-shadow: 
+    0 0 20px rgba(255, 255, 0, 0.5),
+    inset 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+.super-arcade-button:hover {
+  transform: scale(1.1);
+  animation: none;
+  box-shadow: 
+    0 0 30px rgba(255, 255, 0, 0.8),
+    inset 0 0 30px rgba(255, 255, 255, 0.3);
+}
+
+@keyframes buttonPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 
+      0 0 20px rgba(255, 255, 0, 0.5),
+      inset 0 0 20px rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 
+      0 0 30px rgba(255, 255, 0, 0.7),
+      inset 0 0 25px rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* Main Arcade Area */
+.main-arcade-area {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 5;
+}
+
+/* Chat Room Styles */
+.chat-container {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+.chat-rooms {
+  background: rgba(0, 0, 0, 0.8);
+  border: 4px solid #00ff00;
+  border-radius: 15px;
+  padding: 2rem;
+}
+
+.room-list {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.room-item {
+  background: linear-gradient(45deg, #ff0000, #0000ff);
+  border: 2px solid #ffff00;
+  padding: 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.room-item:hover {
+  transform: scale(1.05);
+  background: linear-gradient(45deg, #0000ff, #ff0000);
+}
+
+/* Fun Footer */
+.fun-footer {
+  background: linear-gradient(135deg, #0000ff, #ff0000);
+  padding: 2rem;
+  text-align: center;
+  border-top: 6px solid #ffff00;
+  position: relative;
+  z-index: 10;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .mega-title {
+    font-size: 2rem;
+  }
+  
+  .mega-subtitle {
+    font-size: 1rem;
+  }
+  
+  .chat-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .nav-menu {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .nav-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+}

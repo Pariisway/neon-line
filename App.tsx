@@ -3,6 +3,77 @@ import { VoiceChatRooms } from './components/VoiceChatRooms';
 import { ArcadeRoom } from './components/ArcadeRoom';
 import { Marketplace } from './components/Marketplace';
 
+// Top Navigation Component
+function TopNavigation({ currentPage, setCurrentPage }: { currentPage: string, setCurrentPage: (page: string) => void }) {
+  return (
+    <nav className="top-nav">
+      <ul className="nav-menu">
+        <li>
+          <button 
+            className="nav-button"
+            onClick={() => setCurrentPage('home')}
+          >
+            🏠 HOME
+          </button>
+        </li>
+        <li>
+          <button 
+            className="nav-button"
+            onClick={() => setCurrentPage('voice-chat')}
+          >
+            🎤 VOICE CHAT
+          </button>
+        </li>
+        <li>
+          <button 
+            className="nav-button"
+            onClick={() => setCurrentPage('arcade')}
+          >
+            🎮 ARCADE
+          </button>
+        </li>
+        <li>
+          <button 
+            className="nav-button"
+            onClick={() => setCurrentPage('merch-shop')}
+          >
+            👕 MERCH SHOP
+          </button>
+        </li>
+      </ul>
+    </nav>
+  );
+}
+
+// AdSense Component
+function AdSenseBanner() {
+  return (
+    <div className="adsense-banner">
+      <div className="text-white text-lg font-bold mb-2">Advertisement</div>
+      <div className="bg-gray-800 p-4 rounded-lg text-white">
+        {/* Replace with actual AdSense code */}
+        <p className="text-yellow-400">AdSense Placement - 728x90</p>
+        <p className="text-sm">Your ad could be here!</p>
+      </div>
+    </div>
+  );
+}
+
+function AdSenseSidebar() {
+  return (
+    <div className="adsense-sidebar">
+      <div className="text-center">
+        <div className="text-white text-lg font-bold mb-2">Advertisement</div>
+        <div className="bg-gray-800 p-4 rounded-lg text-white">
+          {/* Replace with actual AdSense code */}
+          <p className="text-yellow-400">AdSense Placement - 300x600</p>
+          <p className="text-sm">Your ad could be here!</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const [currentPage, setCurrentPage] = useState<string>('home');
 
@@ -39,66 +110,42 @@ export default function App() {
             <div className="particle-bg"></div>
             <div className="floating-emojis"></div>
             
-            {/* PREMIUM HOME PAGE ADS - MOST EXPENSIVE */}
-            <div className="ad-leaderboard mt-8">
-              <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184595877548269"></script>
-              <ins className="adsbygoogle"
-                   style={{display: 'inline-block', width: '728px', height: '90px'}}
-                   data-ad-client="ca-pub-1184595877548269"
-                   data-ad-slot="9999999999"></ins>
-            </div>
+            {/* ADVERTISEMENT BANNER */}
+            <AdSenseBanner />
             
             {/* MAIN ARCADE AREA */}
             <div className="main-arcade-area">
-              
-              {/* THREE GIANT ARCADE BUTTONS */}
-              <div className="arcade-button-grid">
-                <button 
-                  className="super-arcade-button"
-                  onClick={() => setCurrentPage('voice-chat')}
-                >
-                  🎤 VOICE CHAT
-                </button>
+              <div className="center-content w-full">
+                <h2 className="text-3xl text-yellow-400 mb-8 mega-glow-yellow">CHOOSE YOUR DESTINATION</h2>
+                
+                {/* THREE GIANT ARCADE BUTTONS */}
+                <div className="arcade-button-grid">
+                  <button 
+                    className="super-arcade-button"
+                    onClick={() => setCurrentPage('voice-chat')}
+                  >
+                    🎤 VOICE CHAT
+                  </button>
 
-                <button 
-                  className="super-arcade-button"
-                  onClick={() => setCurrentPage('arcade')}
-                >
-                  🎮 ARCADE GAMES
-                </button>
+                  <button 
+                    className="super-arcade-button"
+                    onClick={() => setCurrentPage('arcade')}
+                  >
+                    🎮 ARCADE GAMES
+                  </button>
 
-                <button 
-                  className="super-arcade-button"
-                  onClick={() => setCurrentPage('merch-shop')}
-                >
-                  👕 MERCH SHOP
-                </button>
-              </div>
-
-              {/* MEDIUM RECTANGLE AD */}
-              <div className="ad-medium-rectangle">
-                <ins className="adsbygoogle"
-                     style={{display: 'inline-block', width: '300px', height: '250px'}}
-                     data-ad-client="ca-pub-1184595877548269"
-                     data-ad-slot="8888888888"></ins>
-              </div>
-
-              {/* LARGE RECTANGLE AD */}
-              <div className="ad-large-rectangle">
-                <ins className="adsbygoogle"
-                     style={{display: 'inline-block', width: '336px', height: '280px'}}
-                     data-ad-client="ca-pub-1184595877548269"
-                     data-ad-slot="7777777777"></ins>
+                  <button 
+                    className="super-arcade-button"
+                    onClick={() => setCurrentPage('merch-shop')}
+                  >
+                    👕 MERCH SHOP
+                  </button>
+                </div>
               </div>
             </div>
-
-            {/* BOTTOM BANNER AD */}
-            <div className="ad-banner mb-8">
-              <ins className="adsbygoogle"
-                   style={{display: 'inline-block', width: '468px', height: '60px'}}
-                   data-ad-client="ca-pub-1184595877548269"
-                   data-ad-slot="6666666666"></ins>
-            </div>
+            
+            {/* BOTTOM ADVERTISEMENT */}
+            <AdSenseBanner />
           </div>
         );
     }
@@ -110,19 +157,24 @@ export default function App() {
       <div className="particle-bg"></div>
       <div className="floating-emojis"></div>
 
+      {/* TOP NAVIGATION */}
+      <TopNavigation currentPage={currentPage} setCurrentPage={setCurrentPage} />
+
       <div className="relative z-10 min-h-screen flex flex-col">
-        {/* MEGA HEADER */}
-        <header className="mega-header">
-          <h1 className="mega-title mega-glow-red">
-            THE NEON LINE
-          </h1>
-          <h2 className="mega-subtitle mega-glow-yellow">
-            WHERE FRIENDS NEVER DIE
-          </h2>
-          <p className="text-yellow-300 text-xl mt-6">
-            THE ULTIMATE GAMING DESTINATION
-          </p>
-        </header>
+        {/* MEGA HEADER - Only show on home page */}
+        {currentPage === 'home' && (
+          <header className="mega-header">
+            <h1 className="mega-title mega-glow-red">
+              THE NEON LINE
+            </h1>
+            <h2 className="mega-subtitle mega-glow-yellow">
+              WHERE FRIENDS NEVER DIE
+            </h2>
+            <p className="text-yellow-300 text-xl mt-6">
+              THE ULTIMATE GAMING DESTINATION
+            </p>
+          </header>
+        )}
 
         {/* MAIN CONTENT */}
         <main className="flex-1">
@@ -137,6 +189,9 @@ export default function App() {
           <p className="text-red-400 text-lg mt-2">
             CHAT WITH FRIENDS • PLAY AWESOME GAMES • GET COOL STUFF
           </p>
+          <div className="mt-4">
+            <AdSenseBanner />
+          </div>
         </footer>
       </div>
     </div>
