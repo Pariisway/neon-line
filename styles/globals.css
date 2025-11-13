@@ -1,15 +1,13 @@
 @import "tailwindcss";
 
-/* Tron Inspired Theme - Black/Orange/Red */
+/* THE LAST NEON Theme - Based on Figma Design */
 :root {
-  --tron-orange: #ff4d00;
-  --tron-red: #ff0033;
-  --tron-dark-red: #cc0022;
-  --tron-white: #ffffff;
-  --tron-black: #000000;
-  --tron-dark: #0a0a0a;
-  --tron-darker: #050505;
-  --tron-grid: #331100;
+  --neon-pink: #ff00ff;
+  --neon-cyan: #00ffff;
+  --neon-green: #00ff00;
+  --neon-yellow: #ffff00;
+  --dark-bg: #0a0a0a;
+  --card-bg: #1a1a1a;
 }
 
 * {
@@ -19,236 +17,130 @@
 }
 
 body {
-  font-family: 'Orbitron', 'Segoe UI', sans-serif;
-  background: var(--tron-black);
-  color: var(--tron-white);
-  overflow-x: hidden;
-  min-height: 100vh;
+  font-family: 'Arial', 'Helvetica', sans-serif;
+  background: var(--dark-bg);
+  color: white;
+  line-height: 1.6;
 }
 
-/* Tron Grid Background */
-.tron-grid-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: 
-    linear-gradient(90deg, var(--tron-grid) 1px, transparent 1px),
-    linear-gradient(var(--tron-grid) 1px, transparent 1px);
-  background-size: 50px 50px;
-  background-position: 0 0;
-  animation: gridMove 30s linear infinite;
-  z-index: 1;
-}
-
-@keyframes gridMove {
-  0% { transform: translate(0, 0); }
-  100% { transform: translate(50px, 50px); }
-}
-
-/* Tron Glow Effects */
-.tron-glow {
-  color: var(--tron-orange);
+/* Neon Text Effects */
+.neon-text {
+  color: var(--neon-pink);
   text-shadow: 
-    0 0 10px var(--tron-orange),
-    0 0 20px var(--tron-orange),
-    0 0 30px var(--tron-orange),
-    0 0 40px var(--tron-orange);
+    0 0 10px var(--neon-pink),
+    0 0 20px var(--neon-pink),
+    0 0 30px var(--neon-pink);
 }
 
-.tron-glow-red {
-  color: var(--tron-red);
+.neon-cyan {
+  color: var(--neon-cyan);
   text-shadow: 
-    0 0 10px var(--tron-red),
-    0 0 20px var(--tron-red),
-    0 0 30px var(--tron-red);
+    0 0 10px var(--neon-cyan),
+    0 0 20px var(--neon-cyan);
 }
 
-.tron-border {
-  border: 2px solid var(--tron-orange);
-  box-shadow: 
-    0 0 15px var(--tron-orange),
-    inset 0 0 15px var(--tron-orange);
-  background: rgba(255, 77, 0, 0.05);
+.neon-green {
+  color: var(--neon-green);
+  text-shadow: 
+    0 0 10px var(--neon-green),
+    0 0 20px var(--neon-green);
 }
 
-.tron-border-red {
-  border: 2px solid var(--tron-red);
-  box-shadow: 
-    0 0 15px var(--tron-red),
-    inset 0 0 15px rgba(255, 0, 51, 0.1);
-}
-
-/* Tron Style Text */
-.tron-text {
-  font-family: 'Orbitron', monospace;
-  font-weight: 900;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-}
-
-/* Main Container */
-.tron-container {
-  background: rgba(10, 10, 10, 0.95);
-  backdrop-filter: blur(10px);
-  border: 3px solid var(--tron-orange);
-  border-radius: 0;
-  box-shadow: 
-    0 0 30px var(--tron-orange),
-    inset 0 0 30px rgba(255, 77, 0, 0.1);
-  position: relative;
-  z-index: 10;
-}
-
-/* Tron Icon Buttons - Fixed to be clickable */
-.tron-icon {
-  background: rgba(255, 77, 0, 0.1);
-  border: 2px solid var(--tron-orange);
+/* Card Styles */
+.feature-card {
+  background: var(--card-bg);
+  border: 1px solid var(--neon-cyan);
   border-radius: 8px;
-  padding: 40px 30px;
+  padding: 2rem;
+  margin: 1rem 0;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.stat-item {
   text-align: center;
+  padding: 1rem;
+}
+
+/* Button Styles */
+.enter-button {
+  background: transparent;
+  border: 2px solid var(--neon-pink);
+  color: var(--neon-pink);
+  padding: 0.5rem 2rem;
+  border-radius: 25px;
+  font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  min-height: 200px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  margin-top: 1rem;
 }
 
-.tron-icon::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(45deg, transparent, rgba(255, 77, 0, 0.2), transparent);
-  transform: rotate(45deg);
-  transition: all 0.5s ease;
+.enter-button:hover {
+  background: var(--neon-pink);
+  color: black;
+  box-shadow: 0 0 20px var(--neon-pink);
 }
 
-.tron-icon:hover {
-  transform: translateY(-10px) scale(1.05);
-  box-shadow: 
-    0 0 30px var(--tron-orange),
-    0 10px 30px rgba(0, 0, 0, 0.5);
-  background: rgba(255, 77, 0, 0.15);
+/* List Styles */
+.feature-list {
+  list-style: none;
+  margin: 1rem 0;
 }
 
-.tron-icon:hover::before {
-  left: 100%;
-}
-
-.tron-icon:active {
-  transform: translateY(-5px) scale(1.02);
-}
-
-/* Icon Styles */
-.icon-voice::before {
-  content: '🎤';
-  font-size: 4rem;
-  display: block;
-  margin-bottom: 20px;
-}
-
-.icon-arcade::before {
-  content: '🎮';
-  font-size: 4rem;
-  display: block;
-  margin-bottom: 20px;
-}
-
-.icon-merch::before {
-  content: '👕';
-  font-size: 4rem;
-  display: block;
-  margin-bottom: 20px;
-}
-
-/* Ad Container */
-.ad-container {
-  background: rgba(255, 77, 0, 0.1);
-  border: 2px solid var(--tron-orange);
-  padding: 25px;
-  margin: 40px auto;
-  position: relative;
-  z-index: 10;
-  text-align: center;
-  max-width: 800px;
-}
-
-/* Grid Layout - Centered Icons */
-.icons-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 40px;
-  padding: 60px 40px;
-  max-width: 1200px;
-  margin: 0 auto;
-  align-items: center;
-  justify-items: center;
-}
-
-/* Scan Line Effect - Dark Red & Slower */
-.scan-line {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background: var(--tron-dark-red);
-  box-shadow: 
-    0 0 15px var(--tron-red),
-    0 0 30px var(--tron-red);
-  animation: scan 6s linear infinite;
-  z-index: 5;
-}
-
-@keyframes scan {
-  0% { top: 0%; opacity: 0.8; }
-  50% { opacity: 1; }
-  100% { top: 100%; opacity: 0.8; }
+.feature-list li {
+  padding: 0.25rem 0;
+  color: #ccc;
 }
 
 /* Header Styles */
 .main-header {
-  position: relative;
-  z-index: 20;
-  padding: 40px 20px;
   text-align: center;
+  padding: 3rem 1rem;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
 }
 
-/* Content Area - Push icons to middle */
-.content-area {
-  min-height: 70vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  z-index: 10;
+.tagline {
+  color: #888;
+  font-size: 1.2rem;
+  margin: 1rem 0;
+}
+
+/* Section Styles */
+.section {
+  margin: 3rem auto;
+  max-width: 1200px;
+  padding: 0 1rem;
+}
+
+.section-title {
+  color: var(--neon-cyan);
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--neon-cyan);
+  padding-bottom: 0.5rem;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 2rem;
+  background: #111;
+  margin-top: 3rem;
+  color: #666;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .icons-grid {
-    grid-template-columns: 1fr;
-    gap: 30px;
-    padding: 40px 20px;
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
   
-  .tron-icon {
-    padding: 30px 20px;
-    min-height: 180px;
-  }
-  
-  .icon-voice::before,
-  .icon-arcade::before,
-  .icon-merch::before {
-    font-size: 3rem;
+  .feature-card {
+    padding: 1rem;
   }
 }
