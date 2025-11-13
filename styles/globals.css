@@ -103,25 +103,6 @@ body {
   }
 }
 
-/* Neon borders */
-.neon-border {
-  border: 1px solid var(--neon-cyan);
-  box-shadow: 
-    0 0 5px var(--neon-cyan),
-    0 0 10px var(--neon-cyan),
-    inset 0 0 5px var(--neon-cyan);
-  background: rgba(0, 255, 255, 0.05);
-}
-
-.neon-border-pink {
-  border: 1px solid var(--neon-pink);
-  box-shadow: 
-    0 0 5px var(--neon-pink),
-    0 0 10px var(--neon-pink),
-    inset 0 0 5px var(--neon-pink);
-  background: rgba(255, 0, 255, 0.05);
-}
-
 /* Scan lines effect */
 .scan-lines {
   position: fixed;
@@ -164,19 +145,12 @@ body {
 }
 
 /* Container styling */
-.container-center {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 2rem;
-}
-
 .content-section {
   background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(0, 255, 255, 0.3);
-  border-radius: 10px;
+  border-radius: 15px;
   padding: 2rem;
-  margin: 2rem auto;
   position: relative;
   z-index: 10;
 }
@@ -187,14 +161,8 @@ body {
   border: 1px solid var(--neon-cyan);
   border-radius: 8px;
   padding: 1rem;
-  margin: 2rem auto;
   position: relative;
   z-index: 10;
-}
-
-.ad-container iframe {
-  border: none !important;
-  background: transparent !important;
 }
 
 /* Button styling */
@@ -204,11 +172,14 @@ body {
   color: var(--neon-cyan);
   padding: 0.75rem 1.5rem;
   border-radius: 5px;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
   text-shadow: 0 0 5px var(--neon-cyan);
   box-shadow: 0 0 10px var(--neon-cyan);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .neon-button:hover {
