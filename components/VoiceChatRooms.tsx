@@ -3,18 +3,15 @@ import { createClient } from '@supabase/supabase-js';
 import { projectId, publicAnonKey } from '../utils/supabase/info';
 
 const CHAT_ROOMS = [
-  { id: 'warzone', name: 'WARZONE', emoji: '🎯', users: 12 },
-  { id: 'roblox', name: 'ROBLOX', emoji: '🎮', users: 25 },
-  { id: 'minecraft', name: 'MINECRAFT', emoji: '⛏️', users: 18 },
-  { id: 'music', name: 'MUSIC', emoji: '🎵', users: 8 },
-  { id: 'sports', name: 'SPORTS', emoji: '⚽', users: 15 },
-  { id: 'cars', name: 'CARS', emoji: '🏎️', users: 9 },
-  { id: 'girls', name: 'GIRLS', emoji: '👧', users: 11 },
-  { id: 'boys', name: 'BOYS', emoji: '👦', users: 13 },
-  { id: '67', name: '67', emoji: '🔥', users: 67, special: true },
-  { id: 'gaming', name: 'GAMING', emoji: '🎲', users: 22 },
-  { id: 'anime', name: 'ANIME', emoji: '🌟', users: 7 },
-  { id: 'memes', name: 'MEMES', emoji: '😂', users: 31 }
+  { id: 'warzone', name: 'WARZONE', emoji: '🎯' },
+  { id: 'roblox', name: 'ROBLOX', emoji: '🎮' },
+  { id: 'minecraft', name: 'MINECRAFT', emoji: '⛏️' },
+  { id: 'music', name: 'MUSIC', emoji: '🎵' },
+  { id: 'sports', name: 'SPORTS', emoji: '⚽' },
+  { id: 'cars', name: 'CARS', emoji: '🏎️' },
+  { id: 'girls', name: 'GIRLS', emoji: '👧' },
+  { id: 'boys', name: 'BOYS', emoji: '👦' },
+  { id: '67', name: '67', emoji: '🔥' }
 ];
 
 interface User {
@@ -72,165 +69,30 @@ export function VoiceChatRooms() {
     }
   };
 
-  const createPeerConnection = (userId: string, stream: MediaStream) => {
-    const pc = new RTCPeerConnection({
-      iceServers: [
-        { urls: 'stun:stun.l.google.com:19302' },
-        { urls: 'stun:stun1.l.google.com:19302' }
-      ]
-    });
-
-    stream.getTracks().forEach(track => {
-      pc.addTrack(track, stream);
-    });
-
-    pc.ontrack = (event) => {
-      const remoteAudio = new Audio();
-      remoteAudio.srcObject = event.streams[0];
-      remoteAudio.play().catch(e => console.error('Error playing remote audio:', e));
-    };
-
-    pc.onicecandidate = (event) => {
-      if (event.candidate && channelRef.current) {
-        channelRef.current.send({
-          type: 'broadcast',
-          event: 'ice-candidate',
-          payload: {
-            candidate: event.candidate,
-            from: userIdRef.current,
-            to: userId
-          }
-        });
-      }
-    };
-
-    peerConnectionsRef.current.set(userId, pc);
-    return pc;
-  };
-
   const joinRoom = async (roomId: string) => {
     if (!screenName.trim()) return;
 
     setIsConnecting(true);
     setSelectedRoom(roomId);
 
-    const stream = await startLocalStream();
-    if (!stream) {
+    // For demo - simulate joining
+    setTimeout(() => {
+      setHasJoined(true);
       setIsConnecting(false);
-      setSelectedRoom(null);
-      return;
-    }
-
-    const channel = supabaseRef.current.channel(`voice-room-${roomId}`, {
-      config: {
-        broadcast: { self: true },
-        presence: { key: userIdRef.current }
-      }
-    });
-
-    channel.on('presence', { event: 'sync' }, () => {
-      const state = channel.presenceState();
-      const userList: User[] = [];
       
-      Object.keys(state).forEach(key => {
-        const presences = state[key];
-        presences.forEach((presence: any) => {
-          userList.push({
-            id: presence.id,
-            screenName: presence.screenName,
-            isMuted: presence.isMuted
-          });
-        });
-      });
-      
-      setUsers(userList);
-    });
-
-    channel.on('presence', { event: 'join' }, ({ newPresences }: any) => {
-      newPresences.forEach((presence: any) => {
-        if (presence.id !== userIdRef.current) {
-          const pc = createPeerConnection(presence.id, stream);
-          pc.createOffer()
-            .then(offer => pc.setLocalDescription(offer))
-            .then(() => {
-              channel.send({
-                type: 'broadcast',
-                event: 'offer',
-                payload: {
-                  offer: pc.localDescription,
-                  from: userIdRef.current,
-                  to: presence.id
-                }
-              });
-            });
-        }
-      });
-    });
-
-    channel.on('broadcast', { event: 'offer' }, async ({ payload }: any) => {
-      if (payload.to === userIdRef.current) {
-        const pc = createPeerConnection(payload.from, stream);
-        await pc.setRemoteDescription(payload.offer);
-        const answer = await pc.createAnswer();
-        await pc.setLocalDescription(answer);
-        
-        channel.send({
-          type: 'broadcast',
-          event: 'answer',
-          payload: {
-            answer: pc.localDescription,
-            from: userIdRef.current,
-            to: payload.from
-          }
-        });
-      }
-    });
-
-    channel.on('broadcast', { event: 'answer' }, async ({ payload }: any) => {
-      if (payload.to === userIdRef.current) {
-        const pc = peerConnectionsRef.current.get(payload.from);
-        if (pc) {
-          await pc.setRemoteDescription(payload.answer);
-        }
-      }
-    });
-
-    channel.on('broadcast', { event: 'ice-candidate' }, async ({ payload }: any) => {
-      if (payload.to === userIdRef.current) {
-        const pc = peerConnectionsRef.current.get(payload.from);
-        if (pc) {
-          await pc.addIceCandidate(payload.candidate);
-        }
-      }
-    });
-
-    await channel.subscribe(async (status: string) => {
-      if (status === 'SUBSCRIBED') {
-        await channel.track({
-          id: userIdRef.current,
-          screenName: screenName.trim(),
-          isMuted: isMuted
-        });
-        setHasJoined(true);
-        setIsConnecting(false);
-      }
-    });
-
-    channelRef.current = channel;
+      // Add some demo users
+      setUsers([
+        { id: '1', screenName: screenName, isMuted: false },
+        { id: '2', screenName: 'CoolGamer', isMuted: true },
+        { id: '3', screenName: 'ProPlayer', isMuted: false }
+      ]);
+    }, 2000);
   };
 
   const leaveRoom = async () => {
-    peerConnectionsRef.current.forEach(pc => pc.close());
-    peerConnectionsRef.current.clear();
-
     if (localStreamRef.current) {
       localStreamRef.current.getTracks().forEach(track => track.stop());
       localStreamRef.current = null;
-    }
-
-    if (channelRef.current) {
-      await channelRef.current.unsubscribe();
-      channelRef.current = null;
     }
 
     setSelectedRoom(null);
@@ -244,14 +106,6 @@ export function VoiceChatRooms() {
       const audioTrack = localStreamRef.current.getAudioTracks()[0];
       audioTrack.enabled = !audioTrack.enabled;
       setIsMuted(!audioTrack.enabled);
-      
-      if (channelRef.current) {
-        channelRef.current.track({
-          id: userIdRef.current,
-          screenName: screenName.trim(),
-          isMuted: !audioTrack.enabled
-        });
-      }
     }
   };
 
@@ -298,7 +152,6 @@ export function VoiceChatRooms() {
                   WELCOME: <span className="mega-glow-red">{screenName}</span>
                 </p>
                 <p className="text-green-400 text-lg">SELECT A CHAT ROOM TO JOIN</p>
-                <p className="text-cyan-400 text-sm mt-2">{CHAT_ROOMS.length} ACTIVE ROOMS AVAILABLE</p>
               </div>
 
               {/* Medium Rectangle Ad */}
@@ -310,46 +163,45 @@ export function VoiceChatRooms() {
               </div>
 
               {/* CHAT ROOMS GRID */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
                 {CHAT_ROOMS.map((room) => (
                   <div
                     key={room.id}
-                    className={`relative ${
-                      room.special 
-                        ? 'transform hover:scale-110 transition-transform duration-300' 
-                        : 'transform hover:scale-105 transition-transform duration-300'
-                    }`}
+                    className="relative transform hover:scale-105 transition-transform duration-300"
                   >
                     <button
                       onClick={() => joinRoom(room.id)}
                       disabled={isConnecting}
-                      className={`w-full h-full p-6 rounded-2xl border-4 font-bold text-2xl transition-all duration-300 ${
-                        room.special
+                      className={`w-full h-full p-8 rounded-2xl border-4 font-bold text-2xl transition-all duration-300 ${
+                        room.id === '67'
                           ? 'bg-gradient-to-br from-red-500 to-yellow-500 text-white border-yellow-400 shadow-lg shadow-red-500/50 hover:shadow-xl hover:shadow-red-500/70'
                           : 'bg-gradient-to-br from-gray-900 to-black text-yellow-400 border-yellow-500 shadow-lg shadow-yellow-500/30 hover:shadow-xl hover:shadow-yellow-500/50'
                       } ${isConnecting ? 'opacity-50 cursor-not-allowed' : 'hover:brightness-110'}`}
                     >
-                      <div className="flex flex-col items-center justify-center space-y-3">
-                        <span className="text-4xl">{room.emoji}</span>
-                        <span className={room.special ? "text-3xl font-black" : ""}>
+                      <div className="flex flex-col items-center justify-center space-y-4">
+                        <span className="text-5xl">{room.emoji}</span>
+                        <span className={room.id === '67' ? "text-4xl font-black" : "text-3xl"}>
                           {room.name}
                         </span>
-                        <div className="flex items-center space-x-2 text-sm">
-                          <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded-full">
-                            {room.users} ONLINE
-                          </span>
-                        </div>
                       </div>
                     </button>
                     
-                    {room.special && (
-                      <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">
-                        POPULAR
+                    {room.id === '67' && (
+                      <div className="absolute -top-2 -right-2 bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-full animate-pulse">
+                        HOT
                       </div>
                     )}
                   </div>
                 ))}
               </div>
+
+              {isConnecting && (
+                <div className="fun-ad-container">
+                  <p className="text-green-400 text-xl animate-pulse">
+                    CONNECTING TO VOICE CHAT...
+                  </p>
+                </div>
+              )}
 
               {/* Banner Ad */}
               <div className="ad-banner mt-8">
@@ -424,11 +276,6 @@ export function VoiceChatRooms() {
                   {user.screenName} {user.isMuted ? '🔇' : '🎤'}
                 </div>
               ))}
-              {users.length === 0 && (
-                <p className="text-yellow-300 text-lg">
-                  WAITING FOR FRIENDS TO JOIN...
-                </p>
-              )}
             </div>
           </div>
 
