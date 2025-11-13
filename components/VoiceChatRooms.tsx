@@ -2,15 +2,14 @@ import { useState, useEffect, useRef } from 'react';
 import { Mic, MicOff, Users, Radio, LogOut } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
 import { projectId, publicAnonKey } from '../utils/supabase/info';
-import { AdSense } from './AdSense';
 
 const CHAT_ROOMS = [
-  { id: 'roblox', name: 'Roblox', color: 'from-red-500 to-orange-500' },
-  { id: 'fortnite', name: 'Fortnite', color: 'from-purple-500 to-blue-500' },
-  { id: 'minecraft', name: 'Minecraft', color: 'from-green-500 to-lime-500' },
-  { id: 'warzone', name: 'WarZone', color: 'from-yellow-500 to-red-500' },
-  { id: 'general', name: 'General Chat', color: 'from-cyan-500 to-magenta-500' },
-  { id: 'lounge', name: 'Chill Lounge', color: 'from-blue-500 to-purple-500' },
+  { id: 'roblox', name: 'Roblox', emoji: '🎮' },
+  { id: 'fortnite', name: 'Fortnite', emoji: '🏰' },
+  { id: 'minecraft', name: 'Minecraft', emoji: '⛏️' },
+  { id: 'warzone', name: 'WarZone', emoji: '🎯' },
+  { id: 'general', name: 'General Chat', emoji: '💬' },
+  { id: 'lounge', name: 'Chill Lounge', emoji: '🛋️' },
 ];
 
 interface User {
@@ -257,140 +256,125 @@ export function VoiceChatRooms() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <AdSense slot="voice-chat-top" />
+    <div className="text-center p-8">
+      <h1 className="mega-glow-yellow text-4xl mb-8">🎤 VOICE CHAT ROOMS</h1>
       
-      <div className="container mx-auto px-4 py-8">
-        {!hasJoined ? (
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-8">
-              <h2 
-                className="text-4xl mb-4"
+      {!hasJoined ? (
+        <div className="space-y-6 max-w-4xl mx-auto">
+          <div className="fun-ad-container">
+            <p className="text-yellow-300 text-xl mb-4">
+              Enter your screen name and join a voice chat room!
+            </p>
+            
+            <div className="mb-6">
+              <input
+                type="text"
+                value={screenName}
+                onChange={(e) => setScreenName(e.target.value)}
+                placeholder="Enter your cool screen name..."
+                className="w-full max-w-md p-4 bg-black border-2 border-yellow-400 rounded-lg text-white text-xl text-center"
+                style={{boxShadow: '0 0 15px #ffff00'}}
+                maxLength={20}
+              />
+            </div>
+          </div>
+
+          {/* Room Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {CHAT_ROOMS.map((room) => (
+              <button
+                key={room.id}
+                onClick={() => joinRoom(room.id)}
+                disabled={isConnecting || !screenName.trim()}
+                className="super-arcade-button text-2xl"
                 style={{
-                  fontFamily: 'monospace',
-                  textShadow: '0 0 20px rgba(0, 255, 255, 0.8), 0 0 40px rgba(255, 0, 255, 0.5)'
+                  background: 'linear-gradient(145deg, #222, #000)',
+                  border: '4px solid #ff0033',
+                  boxShadow: '0 0 30px #ff0033, inset 0 0 20px rgba(255, 0, 51, 0.2), 0 10px 0 rgba(255, 0, 51, 0.3)',
+                  color: '#ff0033'
                 }}
               >
-                VOICE CHAT ROOMS
-              </h2>
-              <p className="text-cyan-400/70">Connect with gamers around the world. No login required - just pick a name and join!</p>
-            </div>
+                {room.emoji} {room.name}
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="space-y-6 max-w-4xl mx-auto">
+          <div className="fun-ad-container">
+            <h2 className="text-3xl text-green-400 mb-4">
+              🎧 IN VOICE ROOM: {CHAT_ROOMS.find(r => r.id === selectedRoom)?.name?.toUpperCase()}
+            </h2>
+            <p className="text-yellow-300 text-lg">
+              Connected as: <strong>{screenName}</strong>
+            </p>
+          </div>
 
-            <div className="mb-8 flex justify-center">
-              <div className="w-full max-w-md">
-                <label className="block text-cyan-400 mb-2">Enter Your Screen Name:</label>
-                <input
-                  type="text"
-                  value={screenName}
-                  onChange={(e) => setScreenName(e.target.value)}
-                  placeholder="CoolGamer123"
-                  className="w-full px-4 py-3 bg-black/50 border-2 border-cyan-500/50 rounded focus:border-cyan-500 focus:outline-none text-white placeholder:text-cyan-400/30"
-                  maxLength={20}
-                  onKeyDown={(e) => e.key === 'Enter' && selectedRoom && joinRoom(selectedRoom)}
-                />
-              </div>
-            </div>
+          {/* Controls */}
+          <div className="flex gap-4 justify-center">
+            <button
+              onClick={toggleMute}
+              className="super-arcade-button text-xl"
+              style={{
+                background: isMuted 
+                  ? 'linear-gradient(145deg, #333, #111)' 
+                  : 'linear-gradient(145deg, #222, #000)',
+                border: isMuted ? '4px solid #ff0033' : '4px solid #ffff00',
+                boxShadow: isMuted 
+                  ? '0 0 30px #ff0033, inset 0 0 20px rgba(255, 0, 51, 0.2)' 
+                  : '0 0 30px #ffff00, inset 0 0 20px rgba(255, 255, 0, 0.2)',
+                color: isMuted ? '#ff0033' : '#ffff00'
+              }}
+            >
+              {isMuted ? '🔇 UNMUTE' : '🎤 MUTE'}
+            </button>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {CHAT_ROOMS.map((room) => (
-                <button
-                  key={room.id}
-                  onClick={() => joinRoom(room.id)}
-                  disabled={isConnecting || !screenName.trim()}
-                  className={`p-6 rounded-lg border-2 transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed ${
-                    isConnecting && selectedRoom === room.id
-                      ? 'border-white bg-white/10'
-                      : 'border-cyan-500/30 hover:border-cyan-500 bg-black/30'
-                  }`}
-                  style={{
-                    background: `linear-gradient(135deg, rgba(0,0,0,0.8), rgba(0,0,0,0.6)), linear-gradient(135deg, ${
-                      room.color.includes('red') ? 'rgba(255,0,0,0.1)' :
-                      room.color.includes('purple') ? 'rgba(128,0,255,0.1)' :
-                      room.color.includes('green') ? 'rgba(0,255,0,0.1)' :
-                      room.color.includes('yellow') ? 'rgba(255,255,0,0.1)' :
-                      room.color.includes('cyan') ? 'rgba(0,255,255,0.1)' :
-                      'rgba(0,128,255,0.1)'
-                    }, transparent)`
-                  }}
+            <button
+              onClick={leaveRoom}
+              className="super-arcade-button text-xl"
+              style={{
+                background: 'linear-gradient(145deg, #222, #000)',
+                border: '4px solid #ff0033',
+                boxShadow: '0 0 30px #ff0033, inset 0 0 20px rgba(255, 0, 51, 0.2)',
+                color: '#ff0033'
+              }}
+            >
+              🚪 LEAVE ROOM
+            </button>
+          </div>
+
+          {/* Users List */}
+          <div className="fun-ad-container">
+            <h3 className="text-2xl text-yellow-300 mb-4">👥 USERS IN ROOM ({users.length})</h3>
+            <div className="space-y-2">
+              {users.map((user) => (
+                <div
+                  key={user.id}
+                  className="p-4 bg-black border-2 border-yellow-400 rounded-lg text-yellow-300 text-xl"
+                  style={{boxShadow: '0 0 15px #ffff00'}}
                 >
-                  <div className="flex items-center justify-between mb-3">
-                    <Radio className="w-6 h-6 text-cyan-400" />
-                    <Users className="w-5 h-5 text-cyan-400/50" />
-                  </div>
-                  <h3 className="text-xl mb-1">{room.name}</h3>
-                  <p className="text-sm text-cyan-400/50">
-                    {isConnecting && selectedRoom === room.id ? 'Connecting...' : 'Click to join'}
-                  </p>
-                </button>
+                  {user.screenName} {user.isMuted ? '🔇' : '🎤'}
+                </div>
               ))}
+              {users.length === 0 && (
+                <p className="text-yellow-300 text-lg">
+                  Waiting for friends to join...
+                </p>
+              )}
             </div>
           </div>
-        ) : (
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-black/50 border-2 border-cyan-500/50 rounded-lg p-6">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h3 className="text-2xl text-cyan-400">
-                    {CHAT_ROOMS.find(r => r.id === selectedRoom)?.name}
-                  </h3>
-                  <p className="text-cyan-400/50">Connected as: {screenName}</p>
-                </div>
-                <button
-                  onClick={leaveRoom}
-                  className="flex items-center gap-2 px-4 py-2 bg-red-500/20 border border-red-500 text-red-400 rounded hover:bg-red-500/30 transition-all"
-                >
-                  <LogOut className="w-4 h-4" />
-                  Leave Room
-                </button>
-              </div>
+        </div>
+      )}
 
-              <div className="flex gap-4 mb-6">
-                <button
-                  onClick={toggleMute}
-                  className={`flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-lg border-2 transition-all ${
-                    isMuted
-                      ? 'border-red-500 bg-red-500/20 text-red-400'
-                      : 'border-green-500 bg-green-500/20 text-green-400'
-                  }`}
-                >
-                  {isMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
-                  {isMuted ? 'Unmute' : 'Mute'}
-                </button>
-              </div>
-
-              <div>
-                <h4 className="text-cyan-400 mb-3 flex items-center gap-2">
-                  <Users className="w-5 h-5" />
-                  Users in Room ({users.length})
-                </h4>
-                <div className="space-y-2">
-                  {users.map((user) => (
-                    <div
-                      key={user.id}
-                      className="flex items-center justify-between p-3 bg-black/30 border border-cyan-500/20 rounded"
-                    >
-                      <span className="text-white">{user.screenName}</span>
-                      {user.isMuted ? (
-                        <MicOff className="w-4 h-4 text-red-400" />
-                      ) : (
-                        <Mic className="w-4 h-4 text-green-400" />
-                      )}
-                    </div>
-                  ))}
-                  {users.length === 0 && (
-                    <p className="text-cyan-400/50 text-center py-4">
-                      Waiting for others to join...
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div className="mt-8">
-        <AdSense slot="voice-chat-bottom" />
+      {/* Ads */}
+      <div className="fun-ad-container mt-8">
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184595877548269" crossOrigin="anonymous"></script>
+        <ins className="adsbygoogle"
+             style={{display: 'block'}}
+             data-ad-client="ca-pub-1184595877548269"
+             data-ad-slot="voice-chat-top"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
       </div>
     </div>
   );
