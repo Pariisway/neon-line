@@ -39,13 +39,14 @@ body {
   font-family: 'Orbitron', 'Press Start 2P', monospace;
 }
 
-/* Mobile-first responsive design */
+/* Mobile-first responsive design - APPLIED TO ALL SCREENS */
 .container {
   width: 100%;
   padding-right: 1rem;
   padding-left: 1rem;
   margin-right: auto;
   margin-left: auto;
+  max-width: 1200px; /* Consistent max width for all screens */
 }
 
 /* Centering utilities */
@@ -65,14 +66,14 @@ body {
   width: 100%;
 }
 
-/* Navigation Menu - Mobile First */
+/* Navigation Menu - Consistent across all screens */
 .top-nav {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   background: linear-gradient(90deg, #ff0000, #0000ff, #00ff00, #ffff00);
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
   z-index: 1000;
   border-bottom: 4px solid #ffff00;
   backdrop-filter: blur(10px);
@@ -80,28 +81,29 @@ body {
 
 .nav-menu {
   display: flex;
-  justify-content: space-between;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 0.75rem;
   list-style: none;
   margin: 0;
   padding: 0;
   flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .nav-button {
   background: rgba(0, 0, 0, 0.9);
   color: white;
   border: 2px solid #ffff00;
-  padding: 0.5rem 0.75rem;
-  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
   cursor: pointer;
   font-weight: bold;
   text-transform: uppercase;
   transition: all 0.3s ease;
-  font-size: 0.7rem;
-  flex: 1;
-  min-width: 0;
+  font-size: 0.8rem;
   white-space: nowrap;
+  min-width: 80px;
 }
 
 .nav-button:hover {
@@ -110,31 +112,31 @@ body {
   transform: scale(1.05);
 }
 
-/* AdSense Placements - Mobile - TOP AND BOTTOM ONLY */
+/* AdSense Placements - TOP AND BOTTOM ONLY on all screens */
 .adsense-top {
   width: 100%;
   background: #1a1a1a;
   border: 2px solid #ffff00;
-  padding: 0.75rem;
+  padding: 1rem;
   text-align: center;
-  margin-top: 60px; /* Below navigation */
+  margin-top: 70px; /* Below navigation */
 }
 
 .adsense-bottom {
   width: 100%;
   background: #1a1a1a;
   border: 2px solid #ffff00;
-  padding: 0.75rem;
+  padding: 1rem;
   text-align: center;
   margin-bottom: 1rem;
 }
 
 .adsense-banner {
-  display: none; /* Hide middle ads on mobile */
+  display: none; /* Hide middle ads everywhere */
 }
 
 .adsense-sidebar {
-  display: none; /* Hide sidebar ads on mobile */
+  display: none; /* Hide sidebar ads everywhere */
 }
 
 /* Animated Background */
@@ -157,7 +159,7 @@ body {
   50% { opacity: 0.6; }
 }
 
-/* Floating Emojis - Reduce on mobile */
+/* Floating Emojis - Consistent across screens */
 .floating-emojis {
   position: fixed;
   top: 0;
@@ -170,7 +172,7 @@ body {
 
 .floating-emoji {
   position: absolute;
-  font-size: 16px; /* Smaller on mobile */
+  font-size: 18px;
   animation: float 8s ease-in-out infinite;
   text-shadow: 0 0 10px currentColor;
 }
@@ -181,17 +183,17 @@ body {
     opacity: 0.7;
   }
   50% {
-    transform: translateY(-10px) rotate(180deg); /* Less movement on mobile */
+    transform: translateY(-15px) rotate(180deg);
     opacity: 1;
   }
 }
 
-/* Mega Header Styles - Mobile First */
+/* Mega Header Styles - Consistent across screens */
 .mega-header {
   background: linear-gradient(135deg, #ff0000, #0000ff, #00ff00, #ffff00);
   background-size: 400% 400%;
   animation: gradientShift 8s ease infinite;
-  padding: 1rem 1rem 2rem;
+  padding: 2rem 1rem;
   text-align: center;
   border-bottom: 6px solid #ffff00;
   position: relative;
@@ -207,7 +209,7 @@ body {
 }
 
 .mega-title {
-  font-size: 1.75rem;
+  font-size: 2rem;
   font-weight: 900;
   margin: 0;
   text-transform: uppercase;
@@ -216,7 +218,7 @@ body {
 }
 
 .mega-subtitle {
-  font-size: 1rem;
+  font-size: 1.25rem;
   font-weight: 700;
   margin: 0.5rem 0 0 0;
   text-transform: uppercase;
@@ -240,13 +242,13 @@ body {
   color: #ffffff;
 }
 
-/* Super Arcade Buttons - Mobile First */
+/* Super Arcade Buttons - Consistent grid across screens */
 .arcade-button-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
   padding: 2rem 1rem;
-  max-width: 100%;
+  max-width: 1000px;
   margin: 0 auto;
   width: 100%;
 }
@@ -256,9 +258,9 @@ body {
   border: 4px solid #ffff00;
   border-radius: 15px;
   color: white;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 900;
-  padding: 1.5rem 1rem;
+  padding: 2rem 1rem;
   text-transform: uppercase;
   letter-spacing: 1px;
   cursor: pointer;
@@ -269,7 +271,7 @@ body {
     0 0 10px rgba(255, 255, 0, 0.5),
     inset 0 0 10px rgba(255, 255, 255, 0.2);
   width: 100%;
-  min-height: 80px;
+  min-height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -279,7 +281,7 @@ body {
   transform: scale(1.05);
   animation: none;
   box-shadow: 
-    0 0 15px rgba(255, 255, 0, 0.8),
+    0 0 20px rgba(255, 255, 0, 0.8),
     inset 0 0 15px rgba(255, 255, 255, 0.3);
 }
 
@@ -291,7 +293,7 @@ body {
       inset 0 0 10px rgba(255, 255, 255, 0.2);
   }
   50% {
-    transform: scale(1.02);
+    transform: scale(1.03);
     box-shadow: 
       0 0 15px rgba(255, 255, 0, 0.7),
       inset 0 0 12px rgba(255, 255, 255, 0.3);
@@ -300,7 +302,7 @@ body {
 
 /* Main Arcade Area */
 .main-arcade-area {
-  min-height: 50vh;
+  min-height: 60vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -311,45 +313,144 @@ body {
   flex: 1;
 }
 
-/* Chat Room Styles - Mobile */
-.chat-container {
+/* Voice Chat Rooms - FIXED CLICKABILITY */
+.voice-room-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.voice-room-card {
+  background: rgba(0, 0, 0, 0.9);
+  border: 4px solid #ffff00;
+  border-radius: 15px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  max-width: 100%;
-  margin: 1rem auto;
-  padding: 0 1rem;
-  width: 100%;
+  justify-content: space-between;
+  min-height: 200px;
 }
 
-.chat-rooms {
-  background: rgba(0, 0, 0, 0.9);
-  border: 3px solid #00ff00;
-  border-radius: 12px;
-  padding: 1rem;
-  width: 100%;
+.voice-room-card:hover {
+  transform: scale(1.05);
+  border-color: #00ff00;
+  background: rgba(0, 0, 0, 0.95);
 }
 
-.room-list {
-  display: grid;
-  gap: 0.75rem;
-  margin-top: 0.75rem;
-  width: 100%;
+.voice-room-card.active {
+  border-color: #00ff00;
+  background: rgba(0, 100, 0, 0.3);
+  transform: scale(1.02);
 }
 
-.room-item {
-  background: linear-gradient(45deg, #ff0000, #0000ff);
-  border: 2px solid #ffff00;
+.voice-room-card.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.voice-room-card.disabled:hover {
+  transform: none;
+  border-color: #ffff00;
+}
+
+.room-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.room-name {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 0.5rem;
+}
+
+.room-users {
+  color: #00ff00;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.room-button {
+  width: 100%;
   padding: 0.75rem;
+  border: none;
   border-radius: 8px;
+  font-weight: bold;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  width: 100%;
 }
 
-.room-item:hover {
-  transform: scale(1.02);
-  background: linear-gradient(45deg, #0000ff, #ff0000);
+.room-button.join {
+  background: linear-gradient(45deg, #00ff00, #008800);
+  color: white;
+}
+
+.room-button.join:hover {
+  background: linear-gradient(45deg, #00cc00, #006600);
+}
+
+.room-button.leave {
+  background: linear-gradient(45deg, #ff0000, #880000);
+  color: white;
+}
+
+.room-button.leave:hover {
+  background: linear-gradient(45deg, #cc0000, #660000);
+}
+
+.room-button.mute {
+  background: linear-gradient(45deg, #ff9900, #884400);
+  color: white;
+}
+
+.room-button.mute:hover {
+  background: linear-gradient(45deg, #cc7700, #663300);
+}
+
+.room-button:disabled {
+  background: #666;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/* Active Room Status */
+.active-room-status {
+  max-width: 600px;
+  margin: 2rem auto;
+  background: rgba(0, 100, 0, 0.3);
+  border: 4px solid #00ff00;
+  border-radius: 15px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.connection-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #00ff00;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
 /* Fun Footer */
@@ -378,117 +479,6 @@ body {
   padding: 0 1rem;
 }
 
-/* Tablet Styles */
-@media (min-width: 768px) {
-  .mega-title {
-    font-size: 2.5rem;
-  }
-  
-  .mega-subtitle {
-    font-size: 1.5rem;
-  }
-  
-  .nav-button {
-    padding: 0.75rem 1rem;
-    font-size: 0.8rem;
-  }
-  
-  .arcade-button-grid {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    padding: 3rem 2rem;
-  }
-  
-  .super-arcade-button {
-    font-size: 1.3rem;
-    padding: 2rem 1.5rem;
-  }
-  
-  .chat-container {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-  
-  .adsense-banner {
-    display: block; /* Show middle ads on tablet/desktop */
-    width: 100%;
-    background: #1a1a1a;
-    border: 2px solid #ffff00;
-    padding: 1rem;
-    margin: 1rem 0;
-    text-align: center;
-  }
-}
-
-/* Desktop Styles */
-@media (min-width: 1024px) {
-  .mega-header {
-    padding: 6rem 2rem 3rem;
-  }
-  
-  .mega-title {
-    font-size: 3rem;
-  }
-  
-  .mega-subtitle {
-    font-size: 1.75rem;
-  }
-  
-  .nav-menu {
-    gap: 2rem;
-  }
-  
-  .nav-button {
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-  }
-  
-  .arcade-button-grid {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    padding: 4rem 2rem;
-  }
-  
-  .super-arcade-button {
-    font-size: 1.5rem;
-    padding: 2.5rem 2rem;
-  }
-  
-  .chat-container {
-    grid-template-columns: 1fr 300px;
-  }
-  
-  .floating-emoji {
-    font-size: 24px;
-  }
-  
-  .adsense-sidebar {
-    display: flex;
-  }
-}
-
-/* Very small mobile devices */
-@media (max-width: 360px) {
-  .mega-title {
-    font-size: 1.5rem;
-  }
-  
-  .mega-subtitle {
-    font-size: 0.9rem;
-  }
-  
-  .nav-button {
-    font-size: 0.65rem;
-    padding: 0.4rem 0.6rem;
-  }
-  
-  .super-arcade-button {
-    font-size: 1rem;
-    padding: 1.25rem 0.75rem;
-    min-height: 70px;
-  }
-}
-
 /* Fix for mobile Safari */
 @supports (-webkit-touch-callout: none) {
   body {
@@ -510,21 +500,67 @@ html, body {
   -webkit-overflow-scrolling: touch;
 }
 
-/* Ensure everything is properly centered on mobile */
-@media (max-width: 768px) {
+/* Ensure everything is properly centered on all screens */
+.container {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.main-arcade-area > div {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Remove any side margins */
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Very small screen adjustments */
+@media (max-width: 360px) {
+  .mega-title {
+    font-size: 1.5rem;
+  }
+  
+  .mega-subtitle {
+    font-size: 1rem;
+  }
+  
+  .nav-button {
+    font-size: 0.7rem;
+    padding: 0.6rem 0.8rem;
+    min-width: 70px;
+  }
+  
+  .super-arcade-button {
+    font-size: 1rem;
+    padding: 1.5rem 1rem;
+    min-height: 90px;
+  }
+  
+  .arcade-button-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .voice-room-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+/* Large screen minimal adjustments */
+@media (min-width: 1400px) {
   .container {
-    padding-left: 1rem;
-    padding-right: 1rem;
+    max-width: 1200px;
   }
   
-  .main-arcade-area > div {
-    width: 100%;
-    max-width: 100%;
+  .mega-title {
+    font-size: 2.5rem;
   }
   
-  /* Remove any side margins on mobile */
-  .mx-auto {
-    margin-left: auto;
-    margin-right: auto;
+  .mega-subtitle {
+    font-size: 1.5rem;
   }
 }

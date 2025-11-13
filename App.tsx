@@ -51,7 +51,7 @@ function AdSenseTop() {
     <div className="adsense-top">
       <div className="text-white text-sm font-bold mb-1">Advertisement</div>
       <div className="bg-gray-800 p-2 rounded-lg text-white text-xs">
-        <p className="text-yellow-400">Top Ad Placement</p>
+        <p className="text-yellow-400">AdSense Placement</p>
         <p>Your ad could be here!</p>
       </div>
     </div>
@@ -63,7 +63,7 @@ function AdSenseBottom() {
     <div className="adsense-bottom">
       <div className="text-white text-sm font-bold mb-1">Advertisement</div>
       <div className="bg-gray-800 p-2 rounded-lg text-white text-xs">
-        <p className="text-yellow-400">Bottom Ad Placement</p>
+        <p className="text-yellow-400">AdSense Placement</p>
         <p>Your ad could be here!</p>
       </div>
     </div>
@@ -72,27 +72,14 @@ function AdSenseBottom() {
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<string>('home');
-  const [isMobile, setIsMobile] = useState<boolean>(false);
 
-  // Detect mobile device
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  // Create floating emojis - fewer on mobile
+  // Create floating emojis
   useEffect(() => {
     const container = document.querySelector('.floating-emojis');
     if (container) {
       container.innerHTML = ''; // Clear existing
       const emojis = ['🎮', '👾', '🚀', '⭐', '🎯', '👻'];
-      const emojiCount = isMobile ? 8 : 20;
+      const emojiCount = 15; // Consistent across all screens
       
       for (let i = 0; i < emojiCount; i++) {
         const emoji = document.createElement('div');
@@ -105,7 +92,7 @@ export default function App() {
         container.appendChild(emoji);
       }
     }
-  }, [isMobile]);
+  }, []);
 
   const renderPage = () => {
     switch (currentPage) {
@@ -122,15 +109,15 @@ export default function App() {
             <div className="particle-bg"></div>
             <div className="floating-emojis"></div>
             
-            {/* MAIN ARCADE AREA - Centered content only */}
+            {/* MAIN ARCADE AREA - Centered content */}
             <div className="main-arcade-area">
-              <div className="center-content w-full px-4">
-                <h2 className="text-2xl md:text-3xl text-yellow-400 mb-6 md:mb-8 mega-glow-yellow">
+              <div className="center-content w-full">
+                <h2 className="text-3xl text-yellow-400 mb-8 mega-glow-yellow">
                   CHOOSE YOUR DESTINATION
                 </h2>
                 
                 {/* THREE GIANT ARCADE BUTTONS */}
-                <div className="arcade-button-grid w-full">
+                <div className="arcade-button-grid">
                   <button 
                     className="super-arcade-button"
                     onClick={() => setCurrentPage('voice-chat')}
@@ -181,7 +168,7 @@ export default function App() {
             <h2 className="mega-subtitle mega-glow-yellow">
               WHERE FRIENDS NEVER DIE
             </h2>
-            <p className="text-yellow-300 text-sm md:text-xl mt-4 md:mt-6">
+            <p className="text-yellow-300 text-xl mt-4">
               READY FOR YOUR CONTENT
             </p>
           </header>
@@ -197,10 +184,10 @@ export default function App() {
 
         {/* FUN FOOTER */}
         <footer className="fun-footer">
-          <p className="mega-glow-yellow text-lg md:text-2xl">
+          <p className="mega-glow-yellow text-2xl">
             COMING SOON
           </p>
-          <p className="text-red-400 text-sm md:text-lg mt-2">
+          <p className="text-red-400 text-lg mt-2">
             VOICE CHAT • YOUR GAMES • YOUR MERCH
           </p>
         </footer>
