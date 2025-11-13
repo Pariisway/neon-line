@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { VoiceChatRooms } from './components/VoiceChatRooms';
 import { ArcadeRoom } from './components/ArcadeRoom';
 import { Marketplace } from './components/Marketplace';
 
-// Top Navigation Component
+// Simple Navigation
 function TopNavigation({ currentPage, setCurrentPage }: { currentPage: string, setCurrentPage: (page: string) => void }) {
   return (
     <nav className="top-nav">
@@ -45,54 +45,8 @@ function TopNavigation({ currentPage, setCurrentPage }: { currentPage: string, s
   );
 }
 
-// AdSense Components - Top and Bottom Only
-function AdSenseTop() {
-  return (
-    <div className="adsense-top">
-      <div className="text-white text-sm font-bold mb-1">Advertisement</div>
-      <div className="bg-gray-800 p-2 rounded-lg text-white text-xs">
-        <p className="text-yellow-400">AdSense Placement</p>
-        <p>Your ad could be here!</p>
-      </div>
-    </div>
-  );
-}
-
-function AdSenseBottom() {
-  return (
-    <div className="adsense-bottom">
-      <div className="text-white text-sm font-bold mb-1">Advertisement</div>
-      <div className="bg-gray-800 p-2 rounded-lg text-white text-xs">
-        <p className="text-yellow-400">AdSense Placement</p>
-        <p>Your ad could be here!</p>
-      </div>
-    </div>
-  );
-}
-
 export default function App() {
   const [currentPage, setCurrentPage] = useState<string>('home');
-
-  // Create floating emojis
-  useEffect(() => {
-    const container = document.querySelector('.floating-emojis');
-    if (container) {
-      container.innerHTML = ''; // Clear existing
-      const emojis = ['🎮', '👾', '🚀', '⭐', '🎯', '👻'];
-      const emojiCount = 15; // Consistent across all screens
-      
-      for (let i = 0; i < emojiCount; i++) {
-        const emoji = document.createElement('div');
-        emoji.className = 'floating-emoji';
-        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-        emoji.style.left = `${Math.random() * 100}%`;
-        emoji.style.top = `${Math.random() * 100}%`;
-        emoji.style.animationDelay = `${Math.random() * 8}s`;
-        emoji.style.color = i % 2 === 0 ? '#ffff00' : '#ff0033';
-        container.appendChild(emoji);
-      }
-    }
-  }, []);
 
   const renderPage = () => {
     switch (currentPage) {
@@ -104,41 +58,42 @@ export default function App() {
         return <Marketplace />;
       default:
         return (
-          <div className="page-content">
-            {/* ANIMATED BACKGROUND */}
-            <div className="particle-bg"></div>
-            <div className="floating-emojis"></div>
+          <div className="main-content">
+            <header className="mega-header">
+              <h1 className="mega-title">THE NEON LINE</h1>
+              <h2 className="mega-subtitle">WHERE FRIENDS NEVER DIE</h2>
+            </header>
             
-            {/* MAIN ARCADE AREA - Centered content */}
-            <div className="main-arcade-area">
-              <div className="center-content w-full">
-                <h2 className="text-3xl text-yellow-400 mb-8 mega-glow-yellow">
-                  CHOOSE YOUR DESTINATION
-                </h2>
-                
-                {/* THREE GIANT ARCADE BUTTONS */}
-                <div className="arcade-button-grid">
-                  <button 
-                    className="super-arcade-button"
-                    onClick={() => setCurrentPage('voice-chat')}
-                  >
-                    🎤 VOICE CHAT
-                  </button>
+            <div className="text-center py-12">
+              <h2 className="text-3xl text-yellow-400 mb-8">CHOOSE YOUR DESTINATION</h2>
+              
+              <div className="rooms-grid">
+                <button 
+                  className="room-card"
+                  onClick={() => setCurrentPage('voice-chat')}
+                >
+                  <div className="text-4xl mb-4">🎤</div>
+                  <h3 className="text-2xl text-white font-bold mb-2">VOICE CHAT</h3>
+                  <p className="text-green-400">Click to test rooms</p>
+                </button>
 
-                  <button 
-                    className="super-arcade-button"
-                    onClick={() => setCurrentPage('arcade')}
-                  >
-                    🎮 YOUR GAMES
-                  </button>
+                <button 
+                  className="room-card"
+                  onClick={() => setCurrentPage('arcade')}
+                >
+                  <div className="text-4xl mb-4">🎮</div>
+                  <h3 className="text-2xl text-white font-bold mb-2">ARCADE GAMES</h3>
+                  <p className="text-green-400">Your games here</p>
+                </button>
 
-                  <button 
-                    className="super-arcade-button"
-                    onClick={() => setCurrentPage('merch-shop')}
-                  >
-                    👕 YOUR MERCH
-                  </button>
-                </div>
+                <button 
+                  className="room-card"
+                  onClick={() => setCurrentPage('merch-shop')}
+                >
+                  <div className="text-4xl mb-4">👕</div>
+                  <h3 className="text-2xl text-white font-bold mb-2">MERCH SHOP</h3>
+                  <p className="text-green-400">Your products here</p>
+                </button>
               </div>
             </div>
           </div>
@@ -147,51 +102,17 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white relative overflow-hidden matrix-font">
-      {/* ANIMATED BACKGROUND */}
-      <div className="particle-bg"></div>
-      <div className="floating-emojis"></div>
-
-      {/* TOP NAVIGATION */}
+    <div className="min-h-screen bg-black text-white matrix-font">
+      {/* REMOVED: floating-emojis and particle-bg that were blocking clicks */}
+      
       <TopNavigation currentPage={currentPage} setCurrentPage={setCurrentPage} />
+      
+      {renderPage()}
 
-      <div className="relative z-10 min-h-screen flex flex-col">
-        {/* TOP AD - Only on home page */}
-        {currentPage === 'home' && <AdSenseTop />}
-
-        {/* MEGA HEADER - Only show on home page */}
-        {currentPage === 'home' && (
-          <header className="mega-header">
-            <h1 className="mega-title mega-glow-red">
-              THE NEON LINE
-            </h1>
-            <h2 className="mega-subtitle mega-glow-yellow">
-              WHERE FRIENDS NEVER DIE
-            </h2>
-            <p className="text-yellow-300 text-xl mt-4">
-              READY FOR YOUR CONTENT
-            </p>
-          </header>
-        )}
-
-        {/* MAIN CONTENT - Centered properly */}
-        <main className="flex-1 flex flex-col items-center">
-          {renderPage()}
-        </main>
-
-        {/* BOTTOM AD - On all pages */}
-        <AdSenseBottom />
-
-        {/* FUN FOOTER */}
-        <footer className="fun-footer">
-          <p className="mega-glow-yellow text-2xl">
-            COMING SOON
-          </p>
-          <p className="text-red-400 text-lg mt-2">
-            VOICE CHAT • YOUR GAMES • YOUR MERCH
-          </p>
-        </footer>
-      </div>
+      <footer className="fun-footer">
+        <p className="text-yellow-300 text-2xl">PLAY EVERY DAY</p>
+        <p className="text-red-400 text-lg mt-2">CHAT • GAMES • MERCH</p>
+      </footer>
     </div>
   );
 }

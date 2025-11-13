@@ -1,32 +1,13 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 
 export function VoiceChatRooms() {
   const [activeRoom, setActiveRoom] = useState<string | null>(null);
-  const [isMuted, setIsMuted] = useState<boolean>(false);
-  const [webRTCSupported, setWebRTCSupported] = useState<boolean>(true);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [clickTest, setClickTest] = useState(0);
+
   const localStreamRef = useRef<MediaStream | null>(null);
-
-  // Check WebRTC support
-  useEffect(() => {
-    const checkWebRTC = () => {
-      const supported = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
-      setWebRTCSupported(supported);
-    };
-    
-    checkWebRTC();
-  }, []);
-
-  // Clean up stream when component unmounts or room changes
-  useEffect(() => {
-    return () => {
-      if (localStreamRef.current) {
-        localStreamRef.current.getTracks().forEach(track => track.stop());
-        localStreamRef.current = null;
-      }
-    };
-  }, []);
 
   const rooms = [
     { id: 'general', name: 'General Voice Chat', users: 12, icon: '🎤' },
@@ -37,20 +18,23 @@ export function VoiceChatRooms() {
     { id: 'newbies', name: 'New Players', users: 6, icon: '👋' }
   ];
 
-  const joinVoiceChat = async (roomId: string) => {
-    // Prevent multiple clicks
-    if (isLoading || activeRoom) return;
-    
-    if (!webRTCSupported) {
-      setError('Voice chat is not supported in your browser. Please use Chrome, Firefox, or Edge.');
-      return;
-    }
+  const testClick = () => {
+    console.log('🧪 TEST BUTTON CLICKED');
+    setClickTest(prev => prev + 1);
+    alert(`✅ TEST SUCCESSFUL! Click registered. Total: ${clickTest + 1}`);
+  };
 
-    setIsLoading(true);
+  const joinVoiceChat = async (roomId: string) => {
+    console.log('🎯 JOINING ROOM:', roomId);
+    setClickTest(prev => prev + 1);
+    
+    if (isConnecting || activeRoom) return;
+    
+    setIsConnecting(true);
     setError(null);
 
     try {
-      // Request microphone permission
+      console.log('🎤 Requesting microphone access...');
       const stream = await navigator.mediaDevices.getUserMedia({ 
         audio: {
           echoCancellation: true,
@@ -60,44 +44,46 @@ export function VoiceChatRooms() {
       });
       
       localStreamRef.current = stream;
+      console.log('✅ Microphone access granted!');
+
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
       setActiveRoom(roomId);
-      setIsMuted(false);
-      
-      console.log('Voice chat connected for room:', roomId);
-      
-      // In a real app, you'd connect to WebRTC servers here
-      // For demo, we'll simulate successful connection
-      
+      console.log('🎉 Successfully joined room:', roomId);
+
     } catch (error) {
-      console.error('Error accessing microphone:', error);
-      let errorMessage = 'Failed to access microphone. ';
+      console.error('❌ Error joining voice chat:', error);
+      let errorMessage = 'Failed to join voice chat. ';
       
       if (error instanceof Error) {
         if (error.name === 'NotAllowedError') {
-          errorMessage += 'Please allow microphone permissions and try again.';
+          errorMessage = '🎤 Microphone permission denied. Please allow microphone access.';
         } else if (error.name === 'NotFoundError') {
-          errorMessage += 'No microphone found. Please check your audio devices.';
-        } else if (error.name === 'NotSupportedError') {
-          errorMessage += 'Your browser does not support audio capture.';
+          errorMessage = '🔍 No microphone found. Please check audio devices.';
         } else {
           errorMessage += error.message;
         }
       }
       
       setError(errorMessage);
+      
+      if (localStreamRef.current) {
+        localStreamRef.current.getTracks().forEach(track => track.stop());
+        localStreamRef.current = null;
+      }
     } finally {
-      setIsLoading(false);
+      setIsConnecting(false);
     }
   };
 
   const leaveVoiceChat = () => {
+    console.log('🚪 Leaving voice chat');
     if (localStreamRef.current) {
       localStreamRef.current.getTracks().forEach(track => track.stop());
       localStreamRef.current = null;
     }
     setActiveRoom(null);
     setIsMuted(false);
-    setError(null);
   };
 
   const toggleMute = () => {
@@ -109,60 +95,27 @@ export function VoiceChatRooms() {
     setIsMuted(!isMuted);
   };
 
-  const handleRoomClick = (roomId: string) => {
-    if (!activeRoom && !isLoading) {
-      joinVoiceChat(roomId);
-    }
-  };
-
-  const getRoomCardClass = (roomId: string) => {
-    let baseClass = 'voice-room-card';
-    
-    if (activeRoom === roomId) {
-      return `${baseClass} active`;
-    }
-    
-    if (activeRoom || isLoading) {
-      return `${baseClass} disabled`;
-    }
-    
-    return baseClass;
-  };
-
-  const getButtonText = (roomId: string) => {
-    if (activeRoom === roomId) {
-      return '✅ CONNECTED';
-    }
-    
-    if (activeRoom) {
-      return 'IN ANOTHER ROOM';
-    }
-    
-    if (isLoading) {
-      return 'CONNECTING...';
-    }
-    
-    return 'JOIN VOICE CHAT';
-  };
-
   return (
-    <div className="min-h-screen pt-20 pb-10">
-      <div className="container mx-auto px-4">
+    <div className="main-content voice-chat-container">
+      <div className="container">
         <div className="text-center mb-8">
-          <h2 className="text-4xl text-yellow-400 mb-4 mega-glow-yellow">VOICE CHAT ROOMS</h2>
-          <p className="text-white text-xl">Click any room to start voice chatting!</p>
-          
-          {/* WebRTC Status */}
-          <div className={`mt-4 p-3 rounded-lg ${webRTCSupported ? 'bg-green-900 border border-green-400' : 'bg-red-900 border border-red-400'}`}>
-            {webRTCSupported ? (
-              <p className="text-green-400">✅ WebRTC Voice Chat Supported - Click any room to join!</p>
-            ) : (
-              <p className="text-red-400">❌ WebRTC Not Supported - Voice chat unavailable</p>
-            )}
-          </div>
+          <h2 className="text-4xl text-yellow-400 mb-4">VOICE CHAT ROOMS</h2>
+          <p className="text-white text-xl">Click any room to test voice chat!</p>
+          <p className="text-green-400 mt-2">Debug: {clickTest} clicks registered</p>
         </div>
 
-        {/* Error Message */}
+        {/* TEST BUTTON - Should definitely work */}
+        <div className="text-center mb-8 p-4 bg-blue-900 rounded-lg max-w-md mx-auto">
+          <button 
+            className="bg-green-600 hover:bg-green-700 text-white px-6 py-4 rounded-lg text-lg font-bold mb-2 clickable"
+            onClick={testClick}
+            style={{ zIndex: 10000 }}
+          >
+            🧪 CLICK THIS TEST BUTTON FIRST
+          </button>
+          <p className="text-white text-sm">If this works, the page is clickable</p>
+        </div>
+
         {error && (
           <div className="max-w-2xl mx-auto mb-6 bg-red-900 border-2 border-red-400 rounded-lg p-4">
             <p className="text-red-300 text-center">{error}</p>
@@ -175,106 +128,92 @@ export function VoiceChatRooms() {
           </div>
         )}
 
-        {/* Active Room Status */}
         {activeRoom && (
-          <div className="active-room-status">
-            <div className="connection-status">
-              <div className="status-dot"></div>
-              <h3 className="text-2xl text-white font-bold">
-                Connected to: {rooms.find(r => r.id === activeRoom)?.name}
-              </h3>
-            </div>
-            <p className="text-green-300 mb-4">🎤 You are now in voice chat! Speak and others will hear you.</p>
-            
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <div className="max-w-2xl mx-auto mb-8 bg-green-900 border-4 border-green-400 rounded-lg p-6 text-center">
+            <div className="text-4xl mb-4">🎧</div>
+            <h3 className="text-2xl text-white font-bold mb-2">
+              Connected to: {rooms.find(r => r.id === activeRoom)?.name}
+            </h3>
+            <p className="text-green-300 mb-4">✅ Voice chat is working!</p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button 
                 onClick={toggleMute}
-                className={`room-button mute ${isMuted ? 'bg-red-600' : 'bg-yellow-600'}`}
+                className={`px-6 py-3 rounded-lg font-bold text-lg ${
+                  isMuted ? 'bg-red-600 hover:bg-red-700' : 'bg-yellow-600 hover:bg-yellow-700'
+                } text-white`}
               >
-                {isMuted ? '🔇 MUTED - Click to Unmute' : '🔊 SPEAKING - Click to Mute'}
+                {isMuted ? '🔇 MUTED' : '🔊 SPEAKING'}
               </button>
               <button 
                 onClick={leaveVoiceChat}
-                className="room-button leave"
+                className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold text-lg"
               >
-                🚪 Leave Voice Chat
+                🚪 LEAVE CHAT
               </button>
             </div>
           </div>
         )}
 
-        {/* Voice Chat Rooms Grid */}
-        <div className="voice-room-grid">
-          {rooms.map(room => (
-            <div 
-              key={room.id}
-              className={getRoomCardClass(room.id)}
-              onClick={() => handleRoomClick(room.id)}
-            >
-              <div className="flex flex-col items-center">
-                <div className="room-icon">{room.icon}</div>
-                <h3 className="room-name">{room.name}</h3>
-                <div className="room-users">👥 {room.users} gamers online</div>
-              </div>
-              
-              <button 
-                className={`room-button ${activeRoom === room.id ? 'leave' : 'join'} ${(activeRoom && activeRoom !== room.id) || isLoading ? 'disabled' : ''}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleRoomClick(room.id);
-                }}
-                disabled={(activeRoom && activeRoom !== room.id) || isLoading}
-              >
-                {getButtonText(room.id)}
-              </button>
-            </div>
-          ))}
-        </div>
-
-        {/* Loading Overlay */}
-        {isLoading && (
+        {isConnecting && (
           <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
             <div className="bg-gray-800 border-4 border-yellow-400 rounded-lg p-8 text-center">
               <div className="text-4xl mb-4">🎤</div>
-              <h3 className="text-2xl text-yellow-400 mb-4">Connecting to Voice Chat...</h3>
-              <p className="text-white">Please allow microphone permissions when prompted</p>
-              <div className="mt-4 flex justify-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-400"></div>
-              </div>
+              <h3 className="text-2xl text-yellow-400 mb-4">Connecting...</h3>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-400 mx-auto"></div>
             </div>
           </div>
         )}
 
-        {/* Voice Chat Instructions */}
-        <div className="mt-12 max-w-4xl mx-auto bg-gray-800 border border-yellow-400 rounded-lg p-6">
-          <h3 className="text-2xl text-yellow-400 mb-4 text-center">How Voice Chat Works</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-            <div className="bg-gray-700 p-4 rounded">
-              <div className="text-3xl mb-2">1️⃣</div>
-              <p className="text-white font-bold">Click Any Room</p>
-              <p className="text-gray-300 text-sm">Choose your preferred chat room</p>
+        {/* ROOMS GRID - HIGH Z-INDEX */}
+        <div className="rooms-grid" style={{ zIndex: 1000 }}>
+          {rooms.map(room => (
+            <div 
+              key={room.id}
+              className={`room-card clickable ${activeRoom === room.id ? 'active' : ''}`}
+              style={{ 
+                zIndex: 1001,
+                cursor: (activeRoom || isConnecting) ? 'default' : 'pointer',
+                opacity: (activeRoom && activeRoom !== room.id) || isConnecting ? 0.6 : 1
+              }}
+              onClick={() => {
+                console.log('🟦 ROOM CARD CLICKED:', room.id);
+                if (!activeRoom && !isConnecting) {
+                  joinVoiceChat(room.id);
+                }
+              }}
+            >
+              <div className="text-4xl mb-4">{room.icon}</div>
+              <h3 className="text-2xl text-white font-bold mb-2">{room.name}</h3>
+              <div className="text-green-400 mb-4">👥 {room.users} online</div>
+
+              <button 
+                className={`w-full py-3 rounded font-bold text-lg ${
+                  activeRoom === room.id 
+                    ? 'bg-green-600 text-white' 
+                    : (activeRoom || isConnecting) 
+                      ? 'bg-gray-600 text-gray-400' 
+                      : 'bg-yellow-600 hover:bg-yellow-700 text-white'
+                }`}
+                style={{ zIndex: 1002 }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  console.log('🟨 JOIN BUTTON CLICKED:', room.id);
+                  if (!activeRoom && !isConnecting) {
+                    joinVoiceChat(room.id);
+                  }
+                }}
+              >
+                {activeRoom === room.id 
+                  ? '✅ CONNECTED' 
+                  : isConnecting 
+                    ? '🔄 CONNECTING...' 
+                    : activeRoom 
+                      ? 'IN ANOTHER ROOM' 
+                      : 'JOIN VOICE CHAT'
+                }
+              </button>
             </div>
-            <div className="bg-gray-700 p-4 rounded">
-              <div className="text-3xl mb-2">2️⃣</div>
-              <p className="text-white font-bold">Allow Microphone Access</p>
-              <p className="text-gray-300 text-sm">Click "Allow" when your browser asks for permission</p>
-            </div>
-            <div className="bg-gray-700 p-4 rounded">
-              <div className="text-3xl mb-2">3️⃣</div>
-              <p className="text-white font-bold">Start Talking!</p>
-              <p className="text-gray-300 text-sm">Others in the room can hear you instantly</p>
-            </div>
-          </div>
-          
-          <div className="mt-6 p-4 bg-blue-900 border border-blue-400 rounded">
-            <h4 className="text-blue-300 text-lg mb-2">💡 Troubleshooting Tips</h4>
-            <ul className="text-gray-300 text-sm text-left list-disc list-inside space-y-1">
-              <li>If you don't see a permission popup, check your browser's address bar for a microphone icon</li>
-              <li>Ensure your microphone is connected and not muted</li>
-              <li>Try refreshing the page if connections fail</li>
-              <li>Use headphones to avoid echo for other users</li>
-            </ul>
-          </div>
+          ))}
         </div>
       </div>
     </div>
