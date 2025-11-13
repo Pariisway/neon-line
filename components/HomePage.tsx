@@ -1,200 +1,113 @@
-import { Radio, Gamepad2, ShoppingBag, Zap } from 'lucide-react';
-import { AdSense } from './AdSense';
+import { Link } from 'wouter';
 
-interface HomePageProps {
-  onNavigate: (page: string) => void;
-}
-
-export function HomePage({ onNavigate }: HomePageProps) {
+export function HomePage() {
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden">
-      <AdSense slot="home-top" />
-      
-      {/* Hero Section */}
-      <div className="relative">
-        {/* Animated grid background */}
-        <div 
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(0, 255, 255, 0.2) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(0, 255, 255, 0.2) 1px, transparent 1px)
-            `,
-            backgroundSize: '50px 50px',
-            animation: 'gridMove 20s linear infinite'
-          }}
-        />
-        
-        <div className="container mx-auto px-4 py-20 relative">
-          <div className="text-center mb-16">
-            <div className="mb-8 flex justify-center">
-              <div 
-                className="w-32 h-32 bg-gradient-to-br from-cyan-500 via-magenta-500 to-yellow-500 rounded-full flex items-center justify-center animate-pulse"
-                style={{
-                  boxShadow: '0 0 60px rgba(0, 255, 255, 0.6), 0 0 100px rgba(255, 0, 255, 0.4)'
-                }}
-              >
-                <Zap className="w-16 h-16 text-black" />
+    <div className="text-center p-8 matrix-font">
+      <div className="max-w-6xl mx-auto">
+        {/* Hero Section */}
+        <div className="mb-12 pt-8">
+          <h1 className="mega-title mega-glow-red mb-6">
+            THE NEON LINE
+          </h1>
+          <h2 className="mega-subtitle mega-glow-yellow mb-8">
+            WHERE FRIENDS NEVER DIE
+          </h2>
+          <p className="text-yellow-300 text-2xl mb-12">
+            THE ULTIMATE GAMING DESTINATION
+          </p>
+        </div>
+
+        {/* Premium Home Page Ads */}
+        <div className="ad-leaderboard mb-12">
+          <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1184595877548269"></script>
+          <ins className="adsbygoogle"
+               style={{display: 'inline-block', width: '728px', height: '90px'}}
+               data-ad-client="ca-pub-1184595877548269"
+               data-ad-slot="9999999999"></ins>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          <Link href="/voice-chat">
+            <div className="cursor-pointer transform hover:scale-105 transition-all duration-300">
+              <div className="bg-gradient-to-br from-gray-900 to-black border-4 border-yellow-500 rounded-2xl p-8 shadow-2xl shadow-yellow-500/30 hover:shadow-3xl hover:shadow-yellow-500/50 h-64 flex flex-col justify-center">
+                <div className="text-6xl mb-4">🎤</div>
+                <h2 className="text-3xl text-yellow-400 mb-4">VOICE CHAT</h2>
+                <p className="text-gray-300 text-lg">
+                  Join live voice chats with gamers worldwide
+                </p>
               </div>
             </div>
-            
-            <h1 
-              className="text-6xl md:text-8xl mb-6 tracking-wider"
-              style={{
-                fontFamily: 'monospace',
-                textShadow: '0 0 20px rgba(0, 255, 255, 0.8), 0 0 40px rgba(255, 0, 255, 0.6), 0 0 60px rgba(255, 255, 0, 0.4)',
-                background: 'linear-gradient(90deg, #00ffff, #ff00ff, #ffff00, #00ffff)',
-                backgroundSize: '200% auto',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                animation: 'gradientShift 3s ease infinite'
-              }}
-            >
-              THE LAST NEON
-            </h1>
-            
-            <p className="text-2xl text-cyan-400/80 mb-4">
-              Where the 90s Never Died
-            </p>
-            <p className="text-lg text-magenta-400/60 max-w-2xl mx-auto">
-              Voice chat with gamers • Play arcade classics • Shop exclusive merch
-            </p>
-          </div>
+          </Link>
 
-          {/* Feature Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <FeatureCard
-              icon={<Radio className="w-12 h-12" />}
-              title="VOICE ROOMS"
-              description="Join live voice chat rooms for your favorite games. No login required!"
-              color="cyan"
-              onClick={() => onNavigate('voice-chat')}
-              rooms={['Roblox', 'Fortnite', 'Minecraft', 'WarZone', 'General', 'Lounge']}
-            />
-            
-            <FeatureCard
-              icon={<Gamepad2 className="w-12 h-12" />}
-              title="ARCADE"
-              description="Play retro-inspired HTML5 games. Beat high scores and challenge friends!"
-              color="magenta"
-              onClick={() => onNavigate('arcade')}
-              rooms={['Neon Clicker', 'Memory Grid', 'Reaction Time', 'Color Match']}
-            />
-            
-            <FeatureCard
-              icon={<ShoppingBag className="w-12 h-12" />}
-              title="MERCH STORE"
-              description="Exclusive The Last Neon merchandise. Support the community!"
-              color="yellow"
-              onClick={() => onNavigate('marketplace')}
-              rooms={['T-Shirts', 'Hoodies', 'Stickers', 'Accessories']}
-            />
+          <Link href="/games">
+            <div className="cursor-pointer transform hover:scale-105 transition-all duration-300">
+              <div className="bg-gradient-to-br from-gray-900 to-black border-4 border-green-500 rounded-2xl p-8 shadow-2xl shadow-green-500/30 hover:shadow-3xl hover:shadow-green-500/50 h-64 flex flex-col justify-center">
+                <div className="text-6xl mb-4">🎮</div>
+                <h2 className="text-3xl text-green-400 mb-4">GAMES</h2>
+                <p className="text-gray-300 text-lg">
+                  Play classic and modern browser games
+                </p>
+              </div>
+            </div>
+          </Link>
+
+          <Link href="/marketplace">
+            <div className="cursor-pointer transform hover:scale-105 transition-all duration-300">
+              <div className="bg-gradient-to-br from-gray-900 to-black border-4 border-red-500 rounded-2xl p-8 shadow-2xl shadow-red-500/30 hover:shadow-3xl hover:shadow-red-500/50 h-64 flex flex-col justify-center">
+                <div className="text-6xl mb-4">👕</div>
+                <h2 className="text-3xl text-red-400 mb-4">MERCH SHOP</h2>
+                <p className="text-gray-300 text-lg">
+                  Get awesome gaming gear and merch
+                </p>
+              </div>
+            </div>
+          </Link>
+        </div>
+
+        {/* Additional Ads */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+          <div className="ad-medium-rectangle">
+            <ins className="adsbygoogle"
+                 style={{display: 'inline-block', width: '300px', height: '250px'}}
+                 data-ad-client="ca-pub-1184595877548269"
+                 data-ad-slot="8888888888"></ins>
+          </div>
+          <div className="ad-large-rectangle">
+            <ins className="adsbygoogle"
+                 style={{display: 'inline-block', width: '336px', height: '280px'}}
+                 data-ad-client="ca-pub-1184595877548269"
+                 data-ad-slot="7777777777"></ins>
           </div>
         </div>
-      </div>
 
-      {/* Stats Section */}
-      <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-          <StatCard number="6" label="Chat Rooms" />
-          <StatCard number="6" label="Games" />
-          <StatCard number="24/7" label="Online" />
-          <StatCard number="$0" label="To Play" />
+        {/* Features Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          <div className="feature-card p-6 bg-black/50 border-2 border-yellow-400 rounded-xl">
+            <div className="text-4xl mb-4">⚡</div>
+            <h3 className="text-xl text-yellow-400 mb-2">LIGHTNING FAST</h3>
+            <p className="text-gray-400">Instant voice connections</p>
+          </div>
+          <div className="feature-card p-6 bg-black/50 border-2 border-yellow-400 rounded-xl">
+            <div className="text-4xl mb-4">🔒</div>
+            <h3 className="text-xl text-yellow-400 mb-2">SAFE SPACE</h3>
+            <p className="text-gray-400">Moderated 24/7</p>
+          </div>
+          <div className="feature-card p-6 bg-black/50 border-2 border-yellow-400 rounded-xl">
+            <div className="text-4xl mb-4">🌎</div>
+            <h3 className="text-xl text-yellow-400 mb-2">GLOBAL</h3>
+            <p className="text-gray-400">Gamers worldwide</p>
+          </div>
+        </div>
+
+        {/* Bottom Banner Ad */}
+        <div className="ad-banner mb-8">
+          <ins className="adsbygoogle"
+               style={{display: 'inline-block', width: '468px', height: '60px'}}
+               data-ad-client="ca-pub-1184595877548269"
+               data-ad-slot="6666666666"></ins>
         </div>
       </div>
-
-      <AdSense slot="home-bottom" />
-
-      <style>{`
-        @keyframes gridMove {
-          0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
-          100% { transform: perspective(500px) rotateX(60deg) translateY(50px); }
-        }
-        
-        @keyframes gradientShift {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-      `}</style>
-    </div>
-  );
-}
-
-function FeatureCard({ icon, title, description, color, onClick, rooms }: any) {
-  const colorMap: Record<string, any> = {
-    cyan: {
-      border: 'border-cyan-500',
-      bg: 'from-cyan-500/10 to-black',
-      text: 'text-cyan-400',
-      shadow: 'shadow-cyan-500/30',
-      hover: 'hover:border-cyan-400 hover:shadow-cyan-500/50'
-    },
-    magenta: {
-      border: 'border-magenta-500',
-      bg: 'from-magenta-500/10 to-black',
-      text: 'text-magenta-400',
-      shadow: 'shadow-magenta-500/30',
-      hover: 'hover:border-magenta-400 hover:shadow-magenta-500/50'
-    },
-    yellow: {
-      border: 'border-yellow-500',
-      bg: 'from-yellow-500/10 to-black',
-      text: 'text-yellow-400',
-      shadow: 'shadow-yellow-500/30',
-      hover: 'hover:border-yellow-400 hover:shadow-yellow-500/50'
-    }
-  };
-
-  const colors = colorMap[color];
-
-  return (
-    <button
-      onClick={onClick}
-      className={`p-8 rounded-lg border-2 ${colors.border} ${colors.hover} bg-gradient-to-b ${colors.bg} transition-all hover:scale-105 shadow-lg ${colors.shadow} text-left group`}
-    >
-      <div className={`${colors.text} mb-4 group-hover:scale-110 transition-transform`}>
-        {icon}
-      </div>
-      
-      <h3 
-        className="text-2xl mb-3 tracking-wider"
-        style={{ fontFamily: 'monospace' }}
-      >
-        {title}
-      </h3>
-      
-      <p className={`${colors.text} opacity-70 mb-4`}>
-        {description}
-      </p>
-
-      <div className="space-y-1">
-        {rooms.slice(0, 4).map((room: string, i: number) => (
-          <div key={i} className={`text-xs ${colors.text} opacity-50`}>
-            • {room}
-          </div>
-        ))}
-      </div>
-
-      <div className={`mt-6 inline-block px-4 py-2 border ${colors.border} rounded ${colors.text}`}>
-        Enter →
-      </div>
-    </button>
-  );
-}
-
-function StatCard({ number, label }: { number: string; label: string }) {
-  return (
-    <div className="text-center p-6 bg-black/50 border border-cyan-500/30 rounded-lg">
-      <div 
-        className="text-4xl mb-2"
-        style={{
-          fontFamily: 'monospace',
-          textShadow: '0 0 10px rgba(0, 255, 255, 0.6)'
-        }}
-      >
-        {number}
-      </div>
-      <div className="text-cyan-400/70">{label}</div>
     </div>
   );
 }
