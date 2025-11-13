@@ -1,6 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
-import { createClient } from '@supabase/supabase-js';
-import { projectId, publicAnonKey } from '../utils/supabase/info';
+import { useState } from 'react';
 
 const CHAT_ROOMS = [
   { id: 'warzone', name: 'WARZONE', emoji: '🎯' },
@@ -14,33 +12,12 @@ const CHAT_ROOMS = [
   { id: '67', name: '67', emoji: '🔥' }
 ];
 
-interface User {
-  id: string;
-  screenName: string;
-  isMuted: boolean;
-}
-
 export function VoiceChatRooms() {
   const [screenName, setScreenName] = useState('');
   const [hasJoined, setHasJoined] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
   const [isMuted, setIsMuted] = useState(false);
-  const [users, setUsers] = useState<User[]>([]);
-  const [isConnecting, setIsConnecting] = useState(false);
   const [showRoomSelection, setShowRoomSelection] = useState(false);
-  
-  const supabaseRef = useRef<any>(null);
-  const channelRef = useRef<any>(null);
-  const localStreamRef = useRef<MediaStream | null>(null);
-  const peerConnectionsRef = useRef<Map<string, RTCPeerConnection>>(new Map());
-  const userIdRef = useRef<string>(crypto.randomUUID());
-
-  useEffect(() => {
-    supabaseRef.current = createClient(
-      `https://${projectId}.supabase.co`,
-      publicAnonKey
-    );
-  }, []);
 
   const handleNameSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,64 +26,20 @@ export function VoiceChatRooms() {
     }
   };
 
-  const startLocalStream = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        audio: {
-          echoCancellation: true,
-          noiseSuppression: true,
-          autoGainControl: true
-        }, 
-        video: false 
-      });
-      localStreamRef.current = stream;
-      stream.getAudioTracks()[0].enabled = !isMuted;
-      return stream;
-    } catch (error) {
-      console.error('Error accessing microphone:', error);
-      alert('Could not access microphone. Please check permissions.');
-      return null;
-    }
-  };
-
-  const joinRoom = async (roomId: string) => {
+  const joinRoom = (roomId: string) => {
     if (!screenName.trim()) return;
-
-    setIsConnecting(true);
     setSelectedRoom(roomId);
-
-    // For demo - simulate joining
-    setTimeout(() => {
-      setHasJoined(true);
-      setIsConnecting(false);
-      
-      // Add some demo users
-      setUsers([
-        { id: '1', screenName: screenName, isMuted: false },
-        { id: '2', screenName: 'CoolGamer', isMuted: true },
-        { id: '3', screenName: 'ProPlayer', isMuted: false }
-      ]);
-    }, 2000);
+    setHasJoined(true);
   };
 
-  const leaveRoom = async () => {
-    if (localStreamRef.current) {
-      localStreamRef.current.getTracks().forEach(track => track.stop());
-      localStreamRef.current = null;
-    }
-
+  const leaveRoom = () => {
     setSelectedRoom(null);
     setHasJoined(false);
-    setUsers([]);
     setShowRoomSelection(false);
   };
 
   const toggleMute = () => {
-    if (localStreamRef.current) {
-      const audioTrack = localStreamRef.current.getAudioTracks()[0];
-      audioTrack.enabled = !audioTrack.enabled;
-      setIsMuted(!audioTrack.enabled);
-    }
+    setIsMuted(!isMuted);
   };
 
   return (
@@ -171,12 +104,11 @@ export function VoiceChatRooms() {
                   >
                     <button
                       onClick={() => joinRoom(room.id)}
-                      disabled={isConnecting}
                       className={`w-full h-full p-8 rounded-2xl border-4 font-bold text-2xl transition-all duration-300 ${
                         room.id === '67'
                           ? 'bg-gradient-to-br from-red-500 to-yellow-500 text-white border-yellow-400 shadow-lg shadow-red-500/50 hover:shadow-xl hover:shadow-red-500/70'
                           : 'bg-gradient-to-br from-gray-900 to-black text-yellow-400 border-yellow-500 shadow-lg shadow-yellow-500/30 hover:shadow-xl hover:shadow-yellow-500/50'
-                      } ${isConnecting ? 'opacity-50 cursor-not-allowed' : 'hover:brightness-110'}`}
+                      } hover:brightness-110`}
                     >
                       <div className="flex flex-col items-center justify-center space-y-4">
                         <span className="text-5xl">{room.emoji}</span>
@@ -194,14 +126,6 @@ export function VoiceChatRooms() {
                   </div>
                 ))}
               </div>
-
-              {isConnecting && (
-                <div className="fun-ad-container">
-                  <p className="text-green-400 text-xl animate-pulse">
-                    CONNECTING TO VOICE CHAT...
-                  </p>
-                </div>
-              )}
 
               {/* Banner Ad */}
               <div className="ad-banner mt-8">
@@ -265,17 +189,20 @@ export function VoiceChatRooms() {
           </div>
 
           <div className="fun-ad-container">
-            <h3 className="text-2xl text-yellow-300 mb-4">USERS IN ROOM ({users.length})</h3>
+            <h3 className="text-2xl text-yellow-300 mb-4">USERS IN ROOM</h3>
             <div className="space-y-2">
-              {users.map((user) => (
-                <div
-                  key={user.id}
-                  className="p-4 bg-black border-2 border-yellow-400 rounded-lg text-yellow-300 text-xl"
-                  style={{boxShadow: '0 0 15px #ffff00'}}
-                >
-                  {user.screenName} {user.isMuted ? '🔇' : '🎤'}
-                </div>
-              ))}
+              <div className="p-4 bg-black border-2 border-yellow-400 rounded-lg text-yellow-300 text-xl"
+                   style={{boxShadow: '0 0 15px #ffff00'}}>
+                {screenName} {isMuted ? '🔇' : '🎤'} (YOU)
+              </div>
+              <div className="p-4 bg-black border-2 border-yellow-400 rounded-lg text-yellow-300 text-xl"
+                   style={{boxShadow: '0 0 15px #ffff00'}}>
+                CoolGamer 🎤
+              </div>
+              <div className="p-4 bg-black border-2 border-yellow-400 rounded-lg text-yellow-300 text-xl"
+                   style={{boxShadow: '0 0 15px #ffff00'}}>
+                ProPlayer 🔇
+              </div>
             </div>
           </div>
 
