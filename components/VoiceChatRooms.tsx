@@ -3,12 +3,18 @@ import { createClient } from '@supabase/supabase-js';
 import { projectId, publicAnonKey } from '../utils/supabase/info';
 
 const CHAT_ROOMS = [
-  { id: 'roblox', name: 'Roblox', emoji: '🎮' },
-  { id: 'fortnite', name: 'Fortnite', emoji: '🏰' },
-  { id: 'minecraft', name: 'Minecraft', emoji: '⛏️' },
-  { id: 'warzone', name: 'WarZone', emoji: '🎯' },
-  { id: 'general', name: 'General Chat', emoji: '💬' },
-  { id: 'lounge', name: 'Chill Lounge', emoji: '🛋️' },
+  { id: 'warzone', name: 'WARZONE', emoji: '🎯', users: 12 },
+  { id: 'roblox', name: 'ROBLOX', emoji: '🎮', users: 25 },
+  { id: 'minecraft', name: 'MINECRAFT', emoji: '⛏️', users: 18 },
+  { id: 'music', name: 'MUSIC', emoji: '🎵', users: 8 },
+  { id: 'sports', name: 'SPORTS', emoji: '⚽', users: 15 },
+  { id: 'cars', name: 'CARS', emoji: '🏎️', users: 9 },
+  { id: 'girls', name: 'GIRLS', emoji: '👧', users: 11 },
+  { id: 'boys', name: 'BOYS', emoji: '👦', users: 13 },
+  { id: '67', name: '67', emoji: '🔥', users: 67, special: true },
+  { id: 'gaming', name: 'GAMING', emoji: '🎲', users: 22 },
+  { id: 'anime', name: 'ANIME', emoji: '🌟', users: 7 },
+  { id: 'memes', name: 'MEMES', emoji: '😂', users: 31 }
 ];
 
 interface User {
@@ -263,7 +269,7 @@ export function VoiceChatRooms() {
       </div>
       
       {!hasJoined ? (
-        <div className="space-y-6 max-w-4xl mx-auto">
+        <div className="space-y-6 max-w-6xl mx-auto">
           {!showRoomSelection ? (
             <div className="fun-ad-container">
               <p className="text-yellow-300 text-xl mb-4">
@@ -281,7 +287,7 @@ export function VoiceChatRooms() {
                 />
                 
                 <button type="submit" className="join-button">
-                  CONTINUE TO ROOMS
+                  CONTINUE TO CHAT ROOMS
                 </button>
               </form>
             </div>
@@ -291,7 +297,8 @@ export function VoiceChatRooms() {
                 <p className="text-yellow-300 text-xl mb-4">
                   WELCOME: <span className="mega-glow-red">{screenName}</span>
                 </p>
-                <p className="text-green-400 text-lg">SELECT A CHAT ROOM</p>
+                <p className="text-green-400 text-lg">SELECT A CHAT ROOM TO JOIN</p>
+                <p className="text-cyan-400 text-sm mt-2">{CHAT_ROOMS.length} ACTIVE ROOMS AVAILABLE</p>
               </div>
 
               {/* Medium Rectangle Ad */}
@@ -302,23 +309,54 @@ export function VoiceChatRooms() {
                      data-ad-slot="2345678901"></ins>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* CHAT ROOMS GRID */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
                 {CHAT_ROOMS.map((room) => (
-                  <button
+                  <div
                     key={room.id}
-                    onClick={() => joinRoom(room.id)}
-                    disabled={isConnecting}
-                    className="super-arcade-button text-xl"
-                    style={{
-                      background: 'linear-gradient(145deg, #222, #000)',
-                      border: '4px solid #ff0033',
-                      boxShadow: '0 0 30px #ff0033, inset 0 0 20px rgba(255, 0, 51, 0.2)',
-                      color: '#ff0033'
-                    }}
+                    className={`relative ${
+                      room.special 
+                        ? 'transform hover:scale-110 transition-transform duration-300' 
+                        : 'transform hover:scale-105 transition-transform duration-300'
+                    }`}
                   >
-                    {room.emoji} {room.name}
-                  </button>
+                    <button
+                      onClick={() => joinRoom(room.id)}
+                      disabled={isConnecting}
+                      className={`w-full h-full p-6 rounded-2xl border-4 font-bold text-2xl transition-all duration-300 ${
+                        room.special
+                          ? 'bg-gradient-to-br from-red-500 to-yellow-500 text-white border-yellow-400 shadow-lg shadow-red-500/50 hover:shadow-xl hover:shadow-red-500/70'
+                          : 'bg-gradient-to-br from-gray-900 to-black text-yellow-400 border-yellow-500 shadow-lg shadow-yellow-500/30 hover:shadow-xl hover:shadow-yellow-500/50'
+                      } ${isConnecting ? 'opacity-50 cursor-not-allowed' : 'hover:brightness-110'}`}
+                    >
+                      <div className="flex flex-col items-center justify-center space-y-3">
+                        <span className="text-4xl">{room.emoji}</span>
+                        <span className={room.special ? "text-3xl font-black" : ""}>
+                          {room.name}
+                        </span>
+                        <div className="flex items-center space-x-2 text-sm">
+                          <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded-full">
+                            {room.users} ONLINE
+                          </span>
+                        </div>
+                      </div>
+                    </button>
+                    
+                    {room.special && (
+                      <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">
+                        POPULAR
+                      </div>
+                    )}
+                  </div>
                 ))}
+              </div>
+
+              {/* Banner Ad */}
+              <div className="ad-banner mt-8">
+                <ins className="adsbygoogle"
+                     style={{display: 'inline-block', width: '468px', height: '60px'}}
+                     data-ad-client="ca-pub-1184595877548269"
+                     data-ad-slot="3456789012"></ins>
               </div>
             </>
           )}
@@ -327,7 +365,7 @@ export function VoiceChatRooms() {
         <div className="space-y-6 max-w-4xl mx-auto">
           <div className="fun-ad-container">
             <h2 className="text-3xl text-green-400 mb-4">
-              IN VOICE ROOM: {CHAT_ROOMS.find(r => r.id === selectedRoom)?.name?.toUpperCase()}
+              🎧 IN VOICE ROOM: {CHAT_ROOMS.find(r => r.id === selectedRoom)?.name?.toUpperCase()}
             </h2>
             <p className="text-yellow-300 text-lg">
               CONNECTED AS: <strong className="mega-glow-red">{screenName}</strong>
