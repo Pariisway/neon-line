@@ -22,41 +22,42 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-cyan-400 font-mono relative">
-      {/* Animated background elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-pink-500 rounded-full mix-blend-screen opacity-20 animate-pulse"></div>
-        <div className="absolute top-3/4 right-1/4 w-48 h-48 bg-green-500 rounded-full mix-blend-screen opacity-15 animate-bounce"></div>
-        <div className="absolute top-1/2 left-1/2 w-32 h-32 bg-yellow-500 rounded-full mix-blend-screen opacity-10 animate-spin"></div>
-      </div>
+    <div className="min-h-screen bg-black text-cyan-400 font-mono relative crt-effect">
+      {/* Background Elements */}
+      <div className="laser-grid"></div>
+      <div className="scan-lines"></div>
+      
+      {/* Floating orbs */}
+      <div className="fixed top-20 left-10 w-4 h-4 bg-cyan-400 rounded-full opacity-60 animate-pulse"></div>
+      <div className="fixed top-40 right-20 w-6 h-6 bg-pink-400 rounded-full opacity-40 animate-bounce"></div>
+      <div className="fixed bottom-32 left-1/4 w-3 h-3 bg-green-400 rounded-full opacity-50 animate-ping"></div>
 
-      <div className="relative z-10">
+      <div className="relative z-10 container-center">
         <Header currentPage={currentPage} onNavigate={setCurrentPage} />
         
-        {/* Ad Container - Top */}
-        <div className="container mx-auto px-4 mt-4">
-          <div className="ad-container rounded-lg pulse-glow">
-            <ins className="adsbygoogle"
-                 style={{display: 'block'}}
-                 data-ad-client="ca-pub-1184595877548269"
-                 data-ad-slot="1234567890"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-          </div>
+        {/* Top Ad */}
+        <div className="ad-container max-w-4xl mx-auto">
+          <ins className="adsbygoogle"
+               style={{display: 'block', textAlign: 'center'}}
+               data-ad-client="ca-pub-1184595877548269"
+               data-ad-slot="1234567890"
+               data-ad-format="auto"
+               data-full-width-responsive="true"></ins>
         </div>
 
-        {renderPage()}
+        {/* Main Content */}
+        <div className="content-section max-w-6xl">
+          {renderPage()}
+        </div>
 
-        {/* Ad Container - Bottom */}
-        <div className="container mx-auto px-4 mt-8 mb-8">
-          <div className="ad-container rounded-lg pulse-glow">
-            <ins className="adsbygoogle"
-                 style={{display: 'block'}}
-                 data-ad-client="ca-pub-1184595877548269"
-                 data-ad-slot="0987654321"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-          </div>
+        {/* Bottom Ad */}
+        <div className="ad-container max-w-4xl mx-auto">
+          <ins className="adsbygoogle"
+               style={{display: 'block', textAlign: 'center'}}
+               data-ad-client="ca-pub-1184595877548269"
+               data-ad-slot="0987654321"
+               data-ad-format="auto"
+               data-full-width-responsive="true"></ins>
         </div>
       </div>
     </div>
