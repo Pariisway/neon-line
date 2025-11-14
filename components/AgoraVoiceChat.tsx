@@ -5,7 +5,6 @@ interface User {
   uid: number;
   screenName: string;
   isYou?: boolean;
-  audioTrack?: any;
 }
 
 export function AgoraVoiceChat() {
@@ -26,9 +25,7 @@ export function AgoraVoiceChat() {
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const animationRef = useRef<number>(0);
-  const remoteAudioElementsRef = useRef<Map<number, HTMLAudioElement>>(new Map());
 
-  // REAL rooms - NO fake data
   const rooms = [
     { id: 'general', name: 'General Voice Chat', icon: '🎤' },
     { id: 'gaming', name: 'Gaming Lounge', icon: '🎮' },
@@ -38,8 +35,8 @@ export function AgoraVoiceChat() {
     { id: 'newbies', name: 'New Players', icon: '👋' }
   ];
 
-  // 🔑 YOUR REAL AGORA APP ID
-  const AGORA_APP_ID = 19383786453e4bae98ee25658adf5a4c;
+  // 🔑 YOUR REAL AGORA APP ID - MUST BE IN QUOTES!
+  const AGORA_APP_ID = '19383786453e4bae98ee25658adf5a4c';
 
   // Initialize Agora
   useEffect(() => {
@@ -52,62 +49,47 @@ export function AgoraVoiceChat() {
           codec: 'vp8'
         });
 
-        // Handle user published event
+        // Handle user published
         agoraClientRef.current.on('user-published', async (user: any, mediaType: string) => {
+          console.log('User published:', user.uid, mediaType);
+          
           if (mediaType === 'audio') {
             try {
-              await agoraClientRef.current.subscribe(user, mediaType);
+              await agoraClientRef.current.subscribe(user, 'audio');
               const remoteAudioTrack = user.audioTrack;
+              remoteAudioTrack.play();
+              console.log('Playing remote audio from:', user.uid);
               
-              // Create audio element for remote user
-              const audioElement = document.createElement('audio');
-              audioElement.autoplay = true;
-              audioElement.setAttribute('data-user-id', user.uid.toString());
-              audioElement.style.display = 'none';
-              
-              // Play the remote audio track
-              remoteAudioTrack.play(audioElement);
-              remoteAudioElementsRef.current.set(user.uid, audioElement);
-              document.body.appendChild(audioElement);
-              
-              // Add to users list
               setUsersInRoom(prev => {
                 const exists = prev.find(u => u.uid === user.uid);
                 if (!exists) {
                   return [...prev, {
                     uid: user.uid,
                     screenName: `User${user.uid}`,
-                    isYou: false,
-                    audioTrack: remoteAudioTrack
+                    isYou: false
                   }];
                 }
                 return prev;
               });
               
             } catch (subscribeError) {
-              console.error('Error subscribing to user:', subscribeError);
+              console.error('Subscribe error:', subscribeError);
             }
           }
         });
 
         // Handle user left
         agoraClientRef.current.on('user-left', (user: any) => {
-          // Remove audio element
-          const audioElement = remoteAudioElementsRef.current.get(user.uid);
-          if (audioElement) {
-            audioElement.remove();
-            remoteAudioElementsRef.current.delete(user.uid);
-          }
-          
-          // Remove from users list
+          console.log('User left:', user.uid);
           setUsersInRoom(prev => prev.filter(u => u.uid !== user.uid));
         });
 
         setAgoraReady(true);
+        console.log('Agora client ready');
         
       } catch (error) {
-        console.error('Agora initialization failed:', error);
-        setError('Voice chat system failed to initialize.');
+        console.error('Agora init failed:', error);
+        setError('Voice system failed to initialize');
       }
     };
 
@@ -118,7 +100,6 @@ export function AgoraVoiceChat() {
     };
   }, []);
 
-  // Setup audio monitoring
   const setupAudioMonitoring = async (audioTrack: any) => {
     try {
       const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -173,10 +154,9 @@ export function AgoraVoiceChat() {
     analyserRef.current = null;
   };
 
-  // Join voice chat with Agora
   const joinVoiceChat = async (roomId: string, screenName: string) => {
     if (!agoraReady || !agoraClientRef.current) {
-      setError('Voice system not ready yet.');
+      setError('Voice system not ready');
       return;
     }
 
@@ -184,13 +164,17 @@ export function AgoraVoiceChat() {
     setError(null);
 
     try {
+      console.log('Joining Agora room:', roomId);
+
       const token = null;
       const uid = Math.floor(Math.random() * 100000);
 
       await agoraClientRef.current.join(AGORA_APP_ID, roomId, token, uid);
+      console.log('Joined Agora channel:', roomId, 'as user:', uid);
 
       localAudioTrackRef.current = await (await import('agora-rtc-sdk-ng')).default.createMicrophoneAudioTrack();
       await agoraClientRef.current.publish([localAudioTrackRef.current]);
+      console.log('Local audio published');
 
       await setupAudioMonitoring(localAudioTrackRef.current);
 
@@ -206,13 +190,7 @@ export function AgoraVoiceChat() {
     } catch (error) {
       console.error('Error joining voice chat:', error);
       if (error instanceof Error) {
-        if (error.message.includes('permission')) {
-          setError('Microphone permission denied.');
-        } else if (error.message.includes('DEVICE_NOT_FOUND')) {
-          setError('No microphone found.');
-        } else {
-          setError('Failed to join voice chat.');
-        }
+        setError(`Failed: ${error.message}`);
       }
       leaveVoiceChat();
     } finally {
@@ -221,19 +199,15 @@ export function AgoraVoiceChat() {
     }
   };
 
-  // Leave voice chat
   const leaveVoiceChat = async () => {
+    console.log('Leaving voice chat');
+    
     try {
       if (localAudioTrackRef.current) {
         localAudioTrackRef.current.stop();
         localAudioTrackRef.current.close();
         localAudioTrackRef.current = null;
       }
-
-      remoteAudioElementsRef.current.forEach((audioElement, uid) => {
-        audioElement.remove();
-      });
-      remoteAudioElementsRef.current.clear();
 
       if (agoraClientRef.current) {
         await agoraClientRef.current.leave();
@@ -284,7 +258,6 @@ export function AgoraVoiceChat() {
           defaultName={localScreenName}
         />
 
-        {/* AdSense at Top */}
         <div className="ad-container mb-8 text-center">
           <ins className="adsbygoogle"
             style={{display: 'block'}}
@@ -296,9 +269,8 @@ export function AgoraVoiceChat() {
 
         <div className="text-center mb-8">
           <h1 className="text-4xl text-yellow-400 mb-4">VOICE CHAT ROOMS</h1>
-          <p className="text-white text-xl">Real Voice Chat - No Fake Data</p>
+          <p className="text-white text-xl">Real Agora Voice Chat</p>
           
-          {/* Status Indicator */}
           <div className={`max-w-md mx-auto mt-4 p-3 rounded-lg ${
             agoraReady ? 'text-green-400' : 'text-yellow-400'
           } bg-gray-800`}>
@@ -323,7 +295,6 @@ export function AgoraVoiceChat() {
           )}
         </div>
 
-        {/* Active Room Display - ONLY REAL USERS */}
         {activeRoom && (
           <div className="max-w-2xl mx-auto mb-8 bg-green-900 border-4 border-green-400 rounded-lg p-6 text-center">
             <div className="text-4xl mb-4">🎧</div>
@@ -331,7 +302,6 @@ export function AgoraVoiceChat() {
               {rooms.find(r => r.id === activeRoom)?.name}
             </h3>
             
-            {/* Audio Level - REAL DATA */}
             <div className="mb-4">
               <div className="flex items-center justify-center gap-4 mb-2">
                 <div className={`text-lg font-bold ${isSpeaking ? 'text-green-400' : 'text-gray-400'}`}>
@@ -351,7 +321,6 @@ export function AgoraVoiceChat() {
               </div>
             </div>
             
-            {/* REAL Users - ONLY PEOPLE ACTUALLY IN ROOM */}
             <div className="mb-4">
               <p className="text-blue-300 text-sm mb-2">
                 👥 Users in room: {usersInRoom.length}
@@ -389,17 +358,6 @@ export function AgoraVoiceChat() {
           </div>
         )}
 
-        {isConnecting && (
-          <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-            <div className="bg-gray-800 border-4 border-yellow-400 rounded-lg p-8 text-center">
-              <div className="text-4xl mb-4">🎤</div>
-              <h3 className="text-2xl text-yellow-400 mb-4">Joining Voice Chat...</h3>
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-400 mx-auto"></div>
-            </div>
-          </div>
-        )}
-
-        {/* ROOM GRID - NO FAKE USER COUNTS */}
         <div className="rooms-grid">
           {rooms.map(room => (
             <div 
@@ -411,8 +369,6 @@ export function AgoraVoiceChat() {
             >
               <div className="text-4xl mb-4">{room.icon}</div>
               <h3 className="text-2xl text-white font-bold mb-2">{room.name}</h3>
-              
-              {/* NO FAKE USER COUNTS - Only shows 0 */}
               <div className="text-green-400 mb-4">
                 👥 {activeRoom === room.id ? usersInRoom.length : 0} online
               </div>
@@ -442,14 +398,6 @@ export function AgoraVoiceChat() {
           ))}
         </div>
 
-        {/* Connection Info */}
-        <div className="max-w-2xl mx-auto mt-8 bg-gray-800 border border-gray-600 rounded-lg p-4 text-center">
-          <p className="text-gray-400 text-sm">
-            Voice chat powered by Agora • Real users only • No fake data
-          </p>
-        </div>
-
-        {/* AdSense at Bottom */}
         <div className="ad-container mt-8 text-center">
           <ins className="adsbygoogle"
             style={{display: 'block'}}
