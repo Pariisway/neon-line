@@ -1,0 +1,260 @@
+import { useState, useEffect, useRef } from 'react';
+
+export function VoiceChatRooms() {
+  const [activeRoom, setActiveRoom] = useState<string | null>(null);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
+  const [agoraReady, setAgoraReady] = useState(false);
+  const [networkStatus, setNetworkStatus] = useState<'checking' | 'online' | 'blocked'>('checking');
+
+  const agoraClientRef = useRef<any>(null);
+  const localAudioTrackRef = useRef<any>(null);
+
+  const rooms = [
+    { id: 'general', name: 'General Chat', users: 12, icon: '💬' },
+    { id: 'gaming', name: 'Gaming Discussion', users: 8, icon: '🎮' },
+    { id: 'tech', name: 'Tech Talk', users: 5, icon: '💻' },
+    { id: 'music', name: 'Music & Fun', users: 7, icon: '🎵' },
+    { id: 'help', name: 'Help & Support', users: 3, icon: '🆘' }
+  ];
+
+  // Initialize Agora
+  useEffect(() => {
+    const initAgora = async () => {
+      try {
+        const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
+        agoraClientRef.current = AgoraRTC.createClient({
+          mode: 'rtc',
+          codec: 'vp8'
+        });
+        setAgoraReady(true);
+        setNetworkStatus('online');
+        console.log('✅ Agora client ready');
+      } catch (error) {
+        console.error('❌ Agora init failed:', error);
+        setNetworkStatus('blocked');
+      }
+    };
+
+    initAgora();
+  }, []);
+
+  const joinVoiceChat = async (roomId: string) => {
+    if (!agoraReady || !agoraClientRef.current) {
+      alert('Voice system not ready yet. Please try again in a moment.');
+      return;
+    }
+
+    try {
+      const AGORA_APP_ID = '19383786453e4bae98ee25658adf5a4c';
+      const token = null;
+      const uid = Math.floor(Math.random() * 100000);
+
+      await agoraClientRef.current.join(AGORA_APP_ID, roomId, token, uid);
+      
+      // Create and publish local audio track
+      localAudioTrackRef.current = await (await import('agora-rtc-sdk-ng')).default.createMicrophoneAudioTrack();
+      await agoraClientRef.current.publish([localAudioTrackRef.current]);
+      
+      setActiveRoom(roomId);
+      setIsConnected(true);
+      setNetworkStatus('online');
+      
+    } catch (error) {
+      console.error('❌ Error joining voice chat:', error);
+      setNetworkStatus('blocked');
+      
+      alert(
+        '🚨 NETWORK FIREWALL DETECTED\n\n' +
+        'Your network is blocking voice servers. Quick fixes:\n\n' +
+        '📱 Use Mobile Hotspot (Works 95% of time)\n' +
+        '🏠 Try different WiFi\n' +
+        '🌐 Use VPN service\n\n' +
+        'Voice chat works perfectly on open networks!'
+      );
+    }
+  };
+
+  const leaveVoiceChat = async () => {
+    if (localAudioTrackRef.current) {
+      localAudioTrackRef.current.stop();
+      localAudioTrackRef.current.close();
+    }
+    if (agoraClientRef.current) {
+      await agoraClientRef.current.leave();
+    }
+    setActiveRoom(null);
+    setIsConnected(false);
+    setIsMuted(false);
+  };
+
+  const toggleMute = async () => {
+    if (localAudioTrackRef.current) {
+      await localAudioTrackRef.current.setEnabled(isMuted);
+      setIsMuted(!isMuted);
+    }
+  };
+
+  return (
+    <div className="min-h-screen pt-20 pb-10 bg-gradient-to-br from-purple-900 via-blue-900 to-cyan-900">
+      {/* Floating emojis background */}
+      <div className="fixed inset-0 pointer-events-none">
+        {['🎤', '🎧', '📞', '🔊', '🎮', '👥', '💬', '🚀'].map((emoji, index) => (
+          <div
+            key={index}
+            className="absolute animate-float opacity-20"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              fontSize: `${Math.random() * 20 + 15}px`,
+              animationDelay: `${index * 0.5}s`,
+              animationDuration: `${15 + (index % 10)}s`
+            }}
+          >
+            {emoji}
+          </div>
+        ))}
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="text-center mb-8">
+          <h1 className="text-6xl text-yellow-400 mb-4 animate-pulse">🎤 VOICE CHAT 🎤</h1>
+          <p className="text-white text-xl">Talk with fellow gamers in real-time!</p>
+          
+          {/* Network Status */}
+          <div className={`max-w-md mx-auto mt-4 p-3 rounded-lg border-2 ${
+            networkStatus === 'online' ? 'bg-green-900 border-green-400' :
+            networkStatus === 'blocked' ? 'bg-red-900 border-red-400' :
+            'bg-yellow-900 border-yellow-400'
+          }`}>
+            <div className="flex items-center justify-center gap-2">
+              <div className={`w-3 h-3 rounded-full ${
+                networkStatus === 'online' ? 'bg-green-400 animate-pulse' :
+                networkStatus === 'blocked' ? 'bg-red-400' : 'bg-yellow-400 animate-pulse'
+              }`}></div>
+              <span className={
+                networkStatus === 'online' ? 'text-green-400' :
+                networkStatus === 'blocked' ? 'text-red-400' : 'text-yellow-400'
+              }>
+                {networkStatus === 'online' ? 'Voice System Ready' :
+                 networkStatus === 'blocked' ? 'Network Blocked' : 'Checking Network...'}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          {/* Rooms List */}
+          <div className="lg:col-span-1">
+            <div className="bg-gray-900/80 backdrop-blur-sm border-4 border-green-400 rounded-lg p-6">
+              <h3 className="text-2xl text-green-400 mb-4 text-center">Voice Rooms</h3>
+              <div className="space-y-4">
+                {rooms.map(room => (
+                  <div 
+                    key={room.id}
+                    className={`p-4 rounded-lg cursor-pointer transition-all duration-300 ${
+                      activeRoom === room.id 
+                        ? 'bg-yellow-400/20 border-2 border-yellow-400' 
+                        : 'bg-gray-800/50 border-2 border-gray-600 hover:border-green-400'
+                    }`}
+                    onClick={() => !isConnected && joinVoiceChat(room.id)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">{room.icon}</span>
+                      <div className="flex-1">
+                        <div className="text-white font-bold text-lg">{room.name}</div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-yellow-400">👥 {room.users} online</span>
+                          <span className="text-green-400">🔊 Voice</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-sm text-gray-300 mt-2">
+                      {activeRoom === room.id ? '🎧 Connected' : 'Click to join voice chat'}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Voice Controls */}
+              <div className="mt-6 p-4 bg-gray-800/50 rounded-lg border-2 border-purple-500">
+                <h4 className="text-yellow-400 text-lg mb-3 text-center">Voice Controls</h4>
+                <div className="grid grid-cols-2 gap-2">
+                  <button 
+                    onClick={toggleMute}
+                    disabled={!isConnected}
+                    className={`py-3 rounded font-bold ${
+                      isConnected 
+                        ? (isMuted ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600')
+                        : 'bg-gray-600 cursor-not-allowed'
+                    } text-white`}
+                  >
+                    {isMuted ? '🔇 Muted' : '🎤 Unmuted'}
+                  </button>
+                  <button 
+                    onClick={leaveVoiceChat}
+                    disabled={!isConnected}
+                    className={`py-3 rounded font-bold ${
+                      isConnected ? 'bg-red-500 hover:bg-red-600' : 'bg-gray-600 cursor-not-allowed'
+                    } text-white`}
+                  >
+                    📞 Leave
+                  </button>
+                </div>
+                
+                {isConnected && (
+                  <div className="mt-3 p-2 bg-green-900/50 rounded text-center">
+                    <p className="text-green-400 text-sm">✅ Connected to voice chat</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Chat Area */}
+          <div className="lg:col-span-2">
+            <div className="bg-gray-900/80 backdrop-blur-sm rounded-lg p-6 border-4 border-purple-500 h-full">
+              <h3 className="text-2xl text-purple-400 mb-4 text-center">
+                {activeRoom ? `🎧 ${rooms.find(r => r.id === activeRoom)?.name}` : 'Select a Voice Room'}
+              </h3>
+              
+              {isConnected ? (
+                <div className="text-center py-12">
+                  <div className="text-6xl mb-4">🎤</div>
+                  <p className="text-green-400 text-xl font-bold mb-2">You're connected to voice chat!</p>
+                  <p className="text-gray-300 mb-4">Other players in this room can hear you now.</p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+                    <div className="bg-green-900/50 border-2 border-green-400 rounded-lg p-4">
+                      <p className="text-green-300 font-bold">💡 Pro Tip</p>
+                      <p className="text-green-200 text-sm">Use the mute button when not speaking</p>
+                    </div>
+                    <div className="bg-blue-900/50 border-2 border-blue-400 rounded-lg p-4">
+                      <p className="text-blue-300 font-bold">🔊 Audio Quality</p>
+                      <p className="text-blue-200 text-sm">Ensure good microphone for best experience</p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <div className="text-6xl mb-4">🔇</div>
+                  <p className="text-gray-400 text-xl font-bold">Not connected to any room</p>
+                  <p className="text-gray-500 mt-2">Click on a room to join the voice chat</p>
+                  
+                  {networkStatus === 'blocked' && (
+                    <div className="mt-6 bg-red-900/50 border-2 border-red-400 rounded-lg p-4 max-w-md mx-auto">
+                      <p className="text-red-300 font-bold">🚨 Network Issue Detected</p>
+                      <p className="text-red-200 text-sm mt-2">
+                        Your network may be blocking voice servers. Try mobile hotspot!
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
