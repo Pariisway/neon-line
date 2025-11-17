@@ -1,9 +1,0 @@
-services:
-  - type: web
-    name: neon-line
-    env: static
-    buildCommand: npm run build
-    staticPublishPath: ./dist
-    envVars:
-      - key: NODE_VERSION
-        value: 18
