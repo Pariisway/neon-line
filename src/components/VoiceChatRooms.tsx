@@ -1,12 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
+import AgoraRTC from 'agora-rtc-sdk-ng';
 
 export function VoiceChatRooms() {
   const [activeRoom, setActiveRoom] = useState<string | null>(null);
   const [isMuted, setIsMuted] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [agoraReady, setAgoraReady] = useState(false);
-  const [networkStatus, setNetworkStatus] = useState<'checking' | 'online' | 'blocked'>('checking');
-  const [currentToken, setCurrentToken] = useState<string | null>(null);
 
   const agoraClientRef = useRef<any>(null);
   const localAudioTrackRef = useRef<any>(null);
@@ -19,55 +18,42 @@ export function VoiceChatRooms() {
     { id: 'help', name: 'Help & Support', users: 3, icon: '🆘' }
   ];
 
-  const AGORA_APP_ID = '19383786453e4bae98ee25658adf5a4c';
-  const TOKEN_SERVER_URL = import.meta.env.PROD 
-  ? 'https://neon-line-token-server.onrender.com'
-  : 'http://localhost:3001';
-
-  // Function to generate token from server
-  const generateToken = async (channelName: string): Promise<string> => {
-    try {
-      const response = await fetch(`${TOKEN_SERVER_URL}/generate-token`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ channelName }),
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Token server error: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      console.log('✅ Token generated:', data.token);
-      return data.token;
-    } catch (error) {
-      console.error('❌ Token generation failed:', error);
-      throw new Error('Failed to generate token. Make sure token server is running.');
-    }
-  };
+  // Agora App ID (replace with your own)
+  const APP_ID = '19383786453e4bae98ee25658adf5a4c';
 
   // Initialize Agora
   useEffect(() => {
-    const initAgora = async () => {
-      try {
-        const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
-        agoraClientRef.current = AgoraRTC.createClient({
-          mode: 'rtc',
-          codec: 'vp8'
-        });
-        setAgoraReady(true);
-        setNetworkStatus('online');
-        console.log('✅ Agora client ready');
-      } catch (error) {
-        console.error('❌ Agora init failed:', error);
-        setNetworkStatus('blocked');
-      }
-    };
-
-    initAgora();
+    try {
+      agoraClientRef.current = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
+      setAgoraReady(true);
+      console.log('✅ Agora client ready');
+    } catch (error) {
+      console.error('❌ Agora init failed:', error);
+    }
   }, []);
+
+const generateToken = async (channelName: string): Promise<string> => {
+  try {
+    const response = await fetch('https://neon-line-token-server.onrender.com/generate-token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ channelName })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Token server error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    return data.token;
+  } catch (error) {
+    console.error('Error generating token:', error);
+    throw new Error('Failed to get voice chat token. Please try again.');
+  }
+};
+
 
   const joinVoiceChat = async (roomId: string) => {
     if (!agoraReady || !agoraClientRef.current) {
@@ -77,46 +63,22 @@ export function VoiceChatRooms() {
 
     try {
       const uid = Math.floor(Math.random() * 100000);
-      
-      console.log('🔄 Generating token for room:', roomId);
-      
-      // Generate fresh token for this room
+      console.log('Joining room:', roomId);
+
+      // Generate token and join
       const token = await generateToken(roomId);
-      setCurrentToken(token);
-      
-      console.log('🔄 Joining room with token');
-      await agoraClientRef.current.join(AGORA_APP_ID, roomId, token, uid);
-      
+      await agoraClientRef.current.join(APP_ID, roomId, token, uid);
+
       // Create and publish local audio track
-      localAudioTrackRef.current = await (await import('agora-rtc-sdk-ng')).default.createMicrophoneAudioTrack();
+      localAudioTrackRef.current = await AgoraRTC.createMicrophoneAudioTrack();
       await agoraClientRef.current.publish([localAudioTrackRef.current]);
-      
+
       setActiveRoom(roomId);
       setIsConnected(true);
-      setNetworkStatus('online');
       console.log('✅ Successfully joined voice chat');
-      
     } catch (error) {
       console.error('❌ Error joining voice chat:', error);
-      setNetworkStatus('blocked');
-      
-      let errorMsg = '🚨 Connection Failed\n\n';
-      
-      if (error.message.includes('INVALID_TOKEN')) {
-        errorMsg += 'Token authentication failed.\n\n';
-        errorMsg += 'Make sure:\n';
-        errorMsg += '• Token server is running\n';
-        errorMsg += '• App Certificate is correct\n';
-        errorMsg += '• Channel name is valid\n\n';
-      } else if (error.message.includes('Failed to generate token')) {
-        errorMsg += 'Token server issue.\n\n';
-        errorMsg += 'Start the token server:\n';
-        errorMsg += 'cd server && node token-server.js\n\n';
-      } else {
-        errorMsg += 'Error: ' + error.message + '\n\n';
-      }
-      
-      alert(errorMsg);
+      alert('Failed to join voice chat. Make sure your browser allows microphone access.');
     }
   };
 
@@ -131,7 +93,6 @@ export function VoiceChatRooms() {
     setActiveRoom(null);
     setIsConnected(false);
     setIsMuted(false);
-    setCurrentToken(null);
   };
 
   const toggleMute = async () => {
@@ -166,38 +127,6 @@ export function VoiceChatRooms() {
         <div className="text-center mb-8">
           <h1 className="text-6xl text-yellow-400 mb-4 animate-pulse">🎤 VOICE CHAT 🎤</h1>
           <p className="text-white text-xl">Talk with fellow gamers in real-time!</p>
-          
-          {/* Token Status */}
-          {currentToken && (
-            <div className="max-w-md mx-auto mt-4 p-3 bg-green-900 border-2 border-green-400 rounded-lg">
-              <div className="flex items-center justify-center gap-2">
-                <span className="text-green-400 text-sm">
-                  🔑 Token Active - Ready for voice chat
-                </span>
-              </div>
-            </div>
-          )}
-
-          {/* Network Status */}
-          <div className={`max-w-md mx-auto mt-2 p-3 rounded-lg border-2 ${
-            networkStatus === 'online' ? 'bg-green-900 border-green-400' :
-            networkStatus === 'blocked' ? 'bg-red-900 border-red-400' :
-            'bg-yellow-900 border-yellow-400'
-          }`}>
-            <div className="flex items-center justify-center gap-2">
-              <div className={`w-3 h-3 rounded-full ${
-                networkStatus === 'online' ? 'bg-green-400 animate-pulse' :
-                networkStatus === 'blocked' ? 'bg-red-400' : 'bg-yellow-400 animate-pulse'
-              }`}></div>
-              <span className={
-                networkStatus === 'online' ? 'text-green-400' :
-                networkStatus === 'blocked' ? 'text-red-400' : 'text-yellow-400'
-              }>
-                {networkStatus === 'online' ? 'Voice System Ready' :
-                 networkStatus === 'blocked' ? 'Connection Failed' : 'Checking Network...'}
-              </span>
-            </div>
-          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
@@ -280,32 +209,12 @@ export function VoiceChatRooms() {
                   <div className="text-6xl mb-4">🎤</div>
                   <p className="text-green-400 text-xl font-bold mb-2">You're connected to voice chat!</p>
                   <p className="text-gray-300 mb-4">Other players in this room can hear you now.</p>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
-                    <div className="bg-green-900/50 border-2 border-green-400 rounded-lg p-4">
-                      <p className="text-green-300 font-bold">💡 Pro Tip</p>
-                      <p className="text-green-200 text-sm">Use the mute button when not speaking</p>
-                    </div>
-                    <div className="bg-blue-900/50 border-2 border-blue-400 rounded-lg p-4">
-                      <p className="text-blue-300 font-bold">🔊 Audio Quality</p>
-                      <p className="text-blue-200 text-sm">Ensure good microphone for best experience</p>
-                    </div>
-                  </div>
                 </div>
               ) : (
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4">🔇</div>
                   <p className="text-gray-400 text-xl font-bold">Not connected to any room</p>
                   <p className="text-gray-500 mt-2">Click on a room to join the voice chat</p>
-                  
-                  {networkStatus === 'blocked' && (
-                    <div className="mt-6 bg-red-900/50 border-2 border-red-400 rounded-lg p-4 max-w-md mx-auto">
-                      <p className="text-red-300 font-bold">🚨 Setup Required</p>
-                      <p className="text-red-200 text-sm mt-2">
-                        Start token server: cd server && node token-server.js
-                      </p>
-                    </div>
-                  )}
                 </div>
               )}
             </div>
