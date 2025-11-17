@@ -2,34 +2,43 @@ import { useEffect, useRef } from 'react';
 
 interface AdSenseBannerProps {
   slot: string;
-  format?: string;
-  responsive?: boolean;
 }
 
-export function AdSenseBanner({ slot, format = 'auto', responsive = true }: AdSenseBannerProps) {
-  const adRef = useRef<HTMLDivElement>(null);
+export function AdSenseBanner({ slot }: AdSenseBannerProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Wait for the ad container to be in DOM
-    if (adRef.current && (window as any).adsbygoogle) {
-      try {
-        ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
-      } catch (error) {
-        console.log('AdSense load error:', error);
-      }
+    if (process.env.NODE_ENV === 'production' && containerRef.current) {
+      // Use setTimeout to ensure DOM is ready
+      setTimeout(() => {
+        try {
+          if (containerRef.current && !containerRef.current.querySelector('ins')) {
+            containerRef.current.innerHTML = `
+              <ins class="adsbygoogle"
+                   style="display:block"
+                   data-ad-client="ca-pub-1184595877548269"
+                   data-ad-slot="${slot}"
+                   data-ad-format="auto"
+                   data-full-width-responsive="true"></ins>
+              <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+              </script>
+            `;
+          }
+        } catch (error) {
+          console.error('AdSense error:', error);
+        }
+      }, 1000);
     }
-  }, []);
+  }, [slot]);
 
-  return (
-    <div ref={adRef} className="ad-container">
-      <ins 
-        className="adsbygoogle"
-        style={{ display: 'block' }}
-        data-ad-client="ca-pub-3940256099942544"
-        data-ad-slot={slot}
-        data-ad-format={format}
-        data-full-width-responsive={responsive ? 'true' : 'false'}
-      ></ins>
-    </div>
-  );
+  if (process.env.NODE_ENV !== 'production') {
+    return (
+      <div className="bg-gray-700 text-white p-4 text-center rounded">
+        🎯 AdSense Banner ({slot}) - Would show in production
+      </div>
+    );
+  }
+
+  return <div ref={containerRef} />;
 }

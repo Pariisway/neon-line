@@ -20,20 +20,12 @@ export function VoiceChatRooms() {
   ];
 
   const AGORA_APP_ID = '19383786453e4bae98ee25658adf5a4c';
-  const TOKEN_SERVER_URL = import.meta.env.PROD 
-  ? 'https://neon-line-token-server.onrender.com'
-  : 'http://localhost:3001';
+  const TOKEN_SERVER_URL = 'http://localhost:3001';
 
   // Function to generate token from server
   const generateToken = async (channelName: string): Promise<string> => {
     try {
-      const response = await fetch(`${TOKEN_SERVER_URL}/generate-token`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ channelName }),
-      });
+      const response = await fetch(`${TOKEN_SERVER_URL}/token?channel=${channelName}&uid=${Math.floor(Math.random() * 100000)}`);
       
       if (!response.ok) {
         throw new Error(`Token server error: ${response.status}`);

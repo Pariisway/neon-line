@@ -1,10 +1,13 @@
 {
-  "name": "voice-chat-server",
+  "name": "agora-token-server",
   "version": "1.0.0",
   "scripts": {
-    "start": "node signaling-server.js"
+    "start": "node token-server.js"
   },
   "dependencies": {
-    "ws": "^8.14.2"
+    "agora-access-token": "^2.0.4",
+    "agora-token": "^2.0.5",
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
   }
 }
