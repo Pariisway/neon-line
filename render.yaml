@@ -3,7 +3,7 @@ services:
     name: neon-line
     env: static
     buildCommand: npm run build
-    publishDir: dist
+    staticPublishPath: ./dist
     envVars:
       - key: NODE_VERSION
-        value: 18.0.0
+        value: 18
