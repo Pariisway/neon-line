@@ -1,0 +1,16 @@
+services:
+  # Your frontend - Static Site
+  - type: static
+    name: neon-line
+    buildCommand: npm run build
+    staticPublishPath: ./dist
+  
+  # Your backend - Web Service  
+  - type: web
+    name: neon-line-token-server
+    env: node
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
